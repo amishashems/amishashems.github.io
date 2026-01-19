@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amir Shemsu | Full-Stack Developer & Network Engineer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css"> 
+</head>
+<body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <div class="profile-image">
+                <div class="profile-image-inner">
+                    <img src="./assets/images/Photo-Amir.jpg" alt="Your Image" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                </div>
+
+            </div>
+            <div class="profile-name">Amir Shemsu</div>
+            <div class="profile-title">Jr. Software Developer & IT Specialist</div>
+            <div class="contact-info">
+                <button id="contact-toggle-btn" onclick="toggleContactInfo()" class="copy-btn" style="margin-top: 10px;">Show Contact</button>
+                <div id="contact-list" style="display: none; margin-top: 15px;">
+                    <ul style="list-style: none; padding: 0; text-align: left; display: inline-block;">
+                        <li style="margin-bottom: 8px;"><i class="fas fa-phone" style="width: 20px; text-align: center;"></i> <a href="tel:0913082128" style="color: var(--accent-blue); text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">0913082128</a></li>
+                        <li style="margin-bottom: 8px;"><i class="fas fa-envelope" style="width: 20px; text-align: center;"></i> <a href="mailto:amishashems@gmail.com" style="color: var(--accent-blue); text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">amishashems@gmail.com</a></li>
+                        <li style="margin-bottom: 8px;"><i class="fab fa-linkedin" style="width: 20px; text-align: center;"></i> <a href="https://linkedin.com/in/amishashems" target="_blank" style="color: var(--accent-blue); text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">linkedin.com/in/amishashems</a></li>
+                        <li style="margin-bottom: 8px;"><i class="fab fa-github" style="width: 20px; text-align: center;"></i> <a href="https://github.com/AmirShemsu" target="_blank" style="color: var(--accent-blue); text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">github.com/AmirShemsu</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <h3 class="text-lg font-semibold mb-4">Navigation</h3>
+            
+            <div class="nav-links">
+                <a href="#about" class="nav-link">
+                    <div class="nav-icon"><i class="fas fa-user"></i></div>
+                    <div class="nav-text">About Me</div>
+                </a>
+                
+                <a href="#skills" class="nav-link">
+                    <div class="nav-icon"><i class="fas fa-cogs"></i></div>
+                    <div class="nav-text">Technical Skills</div>
+                </a>
+                
+                <a href="#projects" class="nav-link">
+                    <div class="nav-icon"><i class="fas fa-code"></i></div>
+                    <div class="nav-text">Projects</div>
+                </a>
+                
+                <a href="#experience" class="nav-link">
+                    <div class="nav-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="nav-text">Experience</div>
+                </a>
+                
+                <a href="#education" class="nav-link">
+                    <div class="nav-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="nav-text">Education</div>
+                </a>
+                
+                <a href="#contact" class="nav-link">
+                    <div class="nav-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="nav-text">Contact</div>
+                </a>
+            </div>
+
+            <style>
+                .nav-link {
+                    display: flex;
+                    align-items: center;
+                    padding: 12px;
+                    margin: 5px 0;
+                    background: var(--bg-tertiary);
+                    border-radius: 8px;
+                    text-decoration: none;
+                    color: var(--text-secondary);
+                    transition: all 0.2s;
+                }
+
+                .nav-link:hover {
+                    background: var(--accent-blue);
+                    color: white;
+                }
+
+                .nav-icon {
+                    width: 24px;
+                    text-align: center;
+                    margin-right: 10px;
+                }
+
+                .nav-text {
+                    font-size: 14px;
+                }
+            </style>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="mt-8 pt-6 border-t border-border-color">
+            <h3 class="text-lg font-semibold mb-4">Quick Stats</h3>
+            
+            <div class="space-y-3">
+                <div>
+                    <div class="flex justify-between text-sm">
+                        <span>Projects Completed</span>
+                        <span class="text-accent-blue">12+</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 85%"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex justify-between text-sm">
+                        <span>Clients Satisfied</span>
+                        <span class="text-accent-green">100%</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex justify-between text-sm">
+                        <span>Systems Deployed</span>
+                        <span class="text-accent-orange">8</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 67%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download CV Button -->
+        <div class="mt-8">
+            <button onclick="downloadCV()" class="w-full py-3 bg-accent-blue text-white rounded-lg font-semibold hover:bg-blue-600 transition">
+                <i class="fas fa-download mr-2"></i> Download CV
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="mb-10">
+            <h1 class="text-4xl font-bold mb-4">Amir Shemsu</h1>
+            <p class="text-lg text-text-secondary">Jr. Full-Stack Developer & Network Engineer specializing in VoIP systems and enterprise solutions</p>
+        </div>
+
+        <!-- About Section -->
+        <section id="about" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-user"></i> About Me
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <p class="text-text-secondary mb-6">
+                        I am a dedicated IT professional (specialist) with expertise in full-stack web development, VoIP system deployment (Linux), 
+                        and network engineering. My passion lies in building robust, scalable systems that solve real-world problems.
+                    </p>
+                    
+                    <p class="text-text-secondary mb-6">
+                        With a strong foundation in both software development and network infrastructure, I specialize in creating 
+                        integrated solutions that bridge the gap between applications and their underlying infrastructure.
+                    </p>
+                    
+                    <div class="tip-box">
+                        <div class="box-title"><i class="fas fa-lightbulb"></i> My Approach</div>
+                        <p>I believe in understanding the complete system architecture before implementation. This holistic approach ensures that every component works seamlessly together.</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">1/2</div>
+                            <div class="stat-label">Years Experience</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-number">50+</div>
+                            <div class="stat-label">Clients Served</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-number">3+</div>
+                            <div class="stat-label">Projects Completed</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-number">90%</div>
+                            <div class="stat-label">Client Satisfaction</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-cogs"></i> Technical Skills
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Development Skills -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-accent-blue">Development</h3>
+                    
+                    <div class="skill-container">
+                        <div class="skill-name">
+                            <span>PHP & Laravel</span>
+                            <span>95%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-container">
+                        <div class="skill-name">
+                            <span>JavaScript & React</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-container">
+                        <div class="skill-name">
+                            <span>MySQL Database</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-container">
+                        <div class="skill-name">
+                            <span>API Development</span>
+                            <span>60%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Infrastructure Skills -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-accent-green">Infrastructure</h3>
+                    
+                    <div class="skill-container">
+                        <div class="skill-name">
+                            <span>FreePBX & Asterisk</span>
+                            <span>98%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 98%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-container">
+                        <div class="skill-name">
+                            <span>Network Configuration</span>
+                            <span>95%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-container">
+                        <div class="skill-name">
+                            <span>Linux Administration</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-container">
+                        <div class="skill-name">
+                            <span>Security & Firewall</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Skills -->
+            <div class="mt-8">
+                <h3 class="text-lg font-semibold mb-4 text-accent-orange">Tools & Technologies</h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- PHP -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-php text-2xl mb-2 text-accent-green"></i>
+                        <div class="text-sm">PHP</div>
+                    </div>
+                    <!-- Linux CentOS -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-linux text-2xl mb-2 text-accent-green"></i>
+                        <div class="text-sm">Linux</div>
+                    </div>
+                    <!-- WordPress -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-wordpress text-2xl mb-2 text-accent-green"></i>
+                        <div class="text-sm">WordPress</div>
+                    </div>
+                    <!-- Terminal -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fas fa-terminal text-2xl mb-2 text-accent-green"></i>
+                        <div class="text-sm">Terminal</div>
+                    </div>
+                    <!-- Docker -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-docker text-2xl mb-2 text-accent-blue"></i>
+                        <div class="text-sm">Docker</div>
+                    </div>
+                    <!-- Git -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-git-alt text-2xl mb-2 text-accent-orange"></i>
+                        <div class="text-sm">Git</div>
+                    </div>
+                    <!-- AWS -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-aws text-2xl mb-2 text-accent-green"></i>
+                        <div class="text-sm">AWS</div>
+                    </div>
+                    <!-- MySQL -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fas fa-database text-2xl mb-2 text-accent-blue"></i>
+                        <div class="text-sm">MySQL</div>
+                    </div>
+                    <!-- React -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-react text-2xl mb-2 text-white"></i>
+                        <div class="text-sm text-white">React</div>
+                    </div>
+                    <!-- Laravel -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-laravel text-2xl mb-2 text-white"></i>
+                        <div class="text-sm text-white">Laravel</div>
+                    </div>
+                    <!-- ASP.NET Core Icon -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-microsoft text-2xl mb-2 text-white"></i>
+                        <div class="text-sm text-white">ASP.NET Core</div>
+                    </div>
+                    <!-- javascript -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-javascript text-2xl mb-2 text-accent-yellow"></i>
+                        <div class="text-sm">JavaScript</div>
+                    </div>
+                    <!-- JavaScript Icon -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-js-square text-2xl mb-2 text-white"></i>
+                        <div class="text-sm text-white">JavaScript</div>
+                    </div>
+
+                    <!-- Java Icon -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-java text-2xl mb-2 text-white"></i>
+                        <div class="text-sm text-white">Java</div>
+                    </div>
+
+                    <!-- C# Icon -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-microsoft text-2xl mb-2 text-white"></i>
+                        <div class="text-sm text-white">C#</div>
+                    </div>
+
+                    <!-- C++ Icon -->
+                    <div class="text-center p-4 bg-bg-tertiary rounded-lg">
+                        <i class="fab fa-cuttlefish text-2xl mb-2 text-white"></i>
+                        <div class="text-sm text-white">C++</div>
+                    </div>
+
+                    
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-code"></i> Featured Projects
+            </h2>
+
+            <!-- Website Development -->
+            <div class="project-card">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="project-title">Al-Afia Action Association Website</h3>
+                        <p class="text-text-secondary text-sm">Bilingual Healthcare & Education Services Platform</p>
+                    </div>
+                    <a href="https://alafiasc.com" target="_blank" class="copy-btn">
+                        <i class="fas fa-desktop mr-1"></i> View Website
+                    </a>
+                </div>
+                
+                <p class="text-text-secondary mb-4">
+                    Developed a comprehensive bilingual (English/Amharic) website for Al-Afia Action Association, 
+                    showcasing their dual healthcare and education services. The platform features dynamic language 
+                    switching, service information, and organizational details for 549+ members and 5,000+ students.
+                </p>
+                
+                <div class="project-tech">
+                    <span class="tech-tag">WordPress</span>
+                    <span class="tech-tag">PHP</span>
+                    <span class="tech-tag">MySQL</span>
+                    <span class="tech-tag">JavaScript</span>
+                    <span class="tech-tag">Tailwind CSS</span>
+                    <span class="tech-tag">Bilingual System</span>
+                </div>
+                
+                <div class="command-box mt-4">
+                    <div class="command-header">
+                        <div class="command-title">Key Features</div>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">• Dynamic English/Amharic language switching</div>
+                        <div class="command-line">• Complete healthcare service information (5 specialties)</div>
+                        <div class="command-line">• Education services showcase (9 branches, 5,000+ students)</div>
+                        <div class="command-line">• Organization statistics dashboard (549 members, 190M ETB capital)</div>
+                        <div class="command-line">• Mobile-responsive design for Ethiopian users</div>
+                    </div>
+                </div>
+
+                <div class="command-box mt-3">
+                    <div class="command-header">
+                        <div class="command-title">Project Statistics</div>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">• <strong>Members:</strong> 549 (374 male, 174 female, 1 institutional)</div>
+                        <div class="command-line">• <strong>Capital Growth:</strong> 50,000 ETB → 190,082,000 ETB</div>
+                        <div class="command-line">• <strong>Schools:</strong> 9 branches across Addis Ababa & Sheger City</div>
+                        <div class="command-line">• <strong>Students:</strong> 5,000+ with 70-73% national exam pass rate</div>
+                        <div class="command-line">• <strong>Jobs Created:</strong> 600+ employment opportunities</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Al-Afiya Web System -->
+            <div class="project-card">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="project-title">Al-Afiya Share Company Quorum System</h3>
+                        <p class="text-text-secondary text-sm">Real-time voting and attendance tracking platform</p>
+                    </div>
+                    <a href="./projects/Quorum_System_Doc.html" target="_blank" class="copy-btn">
+                        <i class="fas fa-external-link-alt mr-1"></i> View Documentation
+                    </a>
+                </div>
+                
+                <p class="text-text-secondary mb-4">
+                    Developed a comprehensive quorum system for shareholder meetings with real-time voting, 
+                    attendance tracking, and result computation. The system handles high-stakes elections 
+                    with 100% data integrity requirements.
+                </p>
+                
+                <div class="project-tech">
+                    <span class="tech-tag">PHP 8.1</span>
+                    <span class="tech-tag">MySQL</span>
+                    <span class="tech-tag">WebSockets</span>
+                    <span class="tech-tag">Tailwind CSS</span>
+                    <span class="tech-tag">JavaScript ES6+</span>
+                </div>
+                
+                <div class="command-box mt-4">
+                    <div class="command-header">
+                        <div class="command-title">Key Features</div>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">• Real-time vote counting and display</div>
+                        <div class="command-line">• Secure authentication and audit trails</div>
+                        <div class="command-line">• Multi-station simultaneous voting</div>
+                        <div class="command-line">• Automatic quorum calculation</div>
+                        <div class="command-line">• Live result computation and reporting</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FreePBX Deployment -->
+            <div class="project-card">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="project-title">Enterprise FreePBX 17 VoIP System</h3>
+                        <p class="text-text-secondary text-sm">Complete telephony infrastructure deployment</p>
+                    </div>
+                    <div class="flex justify-between items-start mb-4">
+                    <a href="./projects/FreePBX-17_Deployment_Guide.html" target="_blank" class="copy-btn">
+                        <i class="fas fa-external-link-alt mr-1"></i> View Guide
+                    </a>
+                </div>
+                </div>
+                
+                <p class="text-text-secondary mb-4">
+                    Designed and deployed a complete VoIP infrastructure for enterprise communication. 
+                    The system includes SIP trunking, IVR menus, call recording, and high-availability 
+                    failover configurations.
+                </p>
+                
+                <div class="project-tech">
+                    <span class="tech-tag">FreePBX 17</span>
+                    <span class="tech-tag">CentOS 8</span>
+                    <span class="tech-tag">Asterisk 18</span>
+                    <span class="tech-tag">SIP Protocol</span>
+                    <span class="tech-tag">Fail2Ban</span>
+                </div>
+                
+                <div class="command-box mt-4">
+                    <div class="command-header">
+                        <div class="command-title">System Specifications</div>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">• 8 active SIP trunks for redundancy</div>
+                        <div class="command-line">• 150+ extensions with role-based access</div>
+                        <div class="command-line">• Multi-level IVR for call routing</div>
+                        <div class="command-line">• Encrypted call recording storage</div>
+                        <div class="command-line">• Automatic failover and backup</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Network Optimization -->
+            <div class="project-card">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="project-title">Network Traffic Optimization System</h3>
+                        <p class="text-text-secondary text-sm">QoS and traffic shaping implementation</p>
+                    </div>
+                    <div class="flex justify-between items-start mb-4">
+                    <a href="./projects/QoS_LimitUsersAccess_CustomGuide.html" target="_blank" class="copy-btn">
+                        <i class="fas fa-external-link-alt mr-1"></i> View Guide
+                    </a>
+                </div>  </div>
+                
+                <p class="text-text-secondary mb-4">
+                    Developed custom QoS guidelines and traffic shaping rules for TP-Link infrastructure. 
+                    The system prioritizes enterprise traffic while limiting unauthorized access, ensuring 
+                    optimal network performance.
+                </p>
+                
+                <div class="project-tech">
+                    <span class="tech-tag">QoS</span>
+                    <span class="tech-tag">Traffic Shaping</span>
+                    <span class="tech-tag">Firewall Rules</span>
+                    <span class="tech-tag">Network Monitoring</span>
+                    <span class="tech-tag">Bash Scripting</span>
+                </div>
+                
+                <div class="command-box mt-4">
+                    <div class="command-header">
+                        <div class="command-title">Optimization Results</div>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Performance improvements achieved:</div>
+                        <div class="command-line">• Throughput: Increased from 600Mbps to 950Mbps</div>
+                        <div class="command-line">• Latency: Reduced from 45ms to 12ms</div>
+                        <div class="command-line">• Packet Loss: Decreased from 2.5% to 0.01%</div>
+                        <div class="command-line">• VoIP Quality: MOS score improved to 4.3</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        
+
+        <!-- Education Section -->
+        <section id="education" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-graduation-cap"></i> Education & Certifications
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-accent-blue">
+                        <i class="fas fa-university"></i> Formal Education
+                    </h3>
+                    
+                    <div class="step">
+                        <div class="step-number"><i class="fas fa-book"></i></div>
+                        <h3 class="step-title">BSc in Computer Science</h3>
+                        <div class="flex items-center text-sm text-text-secondary mt-1">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span>St. Mary's University, Addis Ababa, Ethiopia</span>
+                        </div>
+                        <div class="flex items-center text-sm text-text-secondary mt-1">
+                            <i class="far fa-calendar mr-2"></i>
+                            <span>Jan 2019 - Aug 2024</span>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number"><i class="fas fa-award"></i></div>
+                        <h3 class="step-title">Academic Excellence Distinction</h3>
+                        <div class="flex items-center text-sm text-text-secondary mt-1">
+                            <i class="fas fa-trophy mr-2 text-accent-orange"></i>
+                            <span>Awarded Distinction Certificate for Academic Excellence</span>
+                        </div>
+                        <div class="flex items-center text-sm text-text-secondary mt-1">
+                            <i class="far fa-calendar mr-2"></i>
+                            <span>August 2024</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-accent-green">
+                        <i class="fas fa-certificate"></i> Certifications & Licenses
+                    </h3>
+                    
+                    <div class="simple-table">
+                        <table>
+                            <tr>
+                                <th><i class="fas fa-file-certificate"></i> Certificate/License</th>
+                                <th><i class="fas fa-calendar-alt"></i> Year</th>
+                                <th><i class="fas fa-building"></i> Authority</th>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-graduation-cap text-accent-blue"></i> University Exit Exam Certificate</td>
+                                <td>2024</td>
+                                <td>FDRE Ministry of Education</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-car text-accent-green"></i> Driving License - D1 Category</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-medal text-accent-orange"></i> Distinction Certificate</td>
+                                <td>2024</td>
+                                <td>St. Mary's University</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Languages -->
+            <div class="mt-8">
+                <h3 class="text-lg font-semibold mb-4 text-accent-orange">
+                    <i class="fas fa-language"></i> Language Skills
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="step">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-globe-africa text-2xl mr-3 text-accent-green"></i>
+                            <h3 class="step-title">Amharic</h3>
+                        </div>
+                        <p class="step-description">Mother Tongue</p>
+                        <div class="mt-3">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-headphones-alt mr-2 text-sm"></i>
+                                    <span class="text-sm">Proficiency:</span>
+                                </div>
+                                <span class="text-accent-green font-semibold">Native</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-flag-usa text-2xl mr-3 text-accent-red"></i>
+                            <h3 class="step-title">English</h3>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-ear-listen mr-2 text-sm"></i>
+                                    <span class="text-sm">Listening:</span>
+                                </div>
+                                <span class="text-accent-green">B2</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-book-reader mr-2 text-sm"></i>
+                                    <span class="text-sm">Reading:</span>
+                                </div>
+                                <span class="text-accent-green">B2</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-pen-alt mr-2 text-sm"></i>
+                                    <span class="text-sm">Writing:</span>
+                                </div>
+                                <span class="text-accent-green">B2</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-microphone mr-2 text-sm"></i>
+                                    <span class="text-sm">Speaking:</span>
+                                </div>
+                                <span class="text-accent-green">B2</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-mosque text-2xl mr-3 text-accent-blue"></i>
+                            <h3 class="step-title">Arabic</h3>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-ear-listen mr-2 text-sm"></i>
+                                    <span class="text-sm">Listening:</span>
+                                </div>
+                                <span class="text-accent-blue">C1</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-book-reader mr-2 text-sm"></i>
+                                    <span class="text-sm">Reading:</span>
+                                </div>
+                                <span class="text-accent-blue">C1</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-pen-alt mr-2 text-sm"></i>
+                                    <span class="text-sm">Writing:</span>
+                                </div>
+                                <span class="text-accent-green">B2</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-microphone mr-2 text-sm"></i>
+                                    <span class="text-sm">Speaking:</span>
+                                </div>
+                                <span class="text-accent-orange">A2/A1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tip-box mt-4">
+                    <div class="box-title"><i class="fas fa-info-circle"></i> CEFR Levels Reference</div>
+                    <p>
+                        <span class="text-accent-orange"><i class="fas fa-user-graduate"></i> A1-A2:</span> Basic User | 
+                        <span class="text-accent-green"><i class="fas fa-user-tie"></i> B1-B2:</span> Independent User | 
+                        <span class="text-accent-blue"><i class="fas fa-user-check"></i> C1-C2:</span> Proficient User
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Technical Skills -->
+            <div class="mt-8">
+                <h3 class="text-lg font-semibold mb-4 text-accent-blue">
+                    <i class="fas fa-code"></i> Technical Skills
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="step">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-laptop-code text-xl mr-3 text-accent-green"></i>
+                            <h3 class="step-title">Programming Languages</h3>
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fab fa-cuttlefish mr-2" style="color: #00599C;"></i>C++
+                                </span>
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fab fa-microsoft mr-2" style="color: #68217A;"></i>C#
+                                </span>
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fab fa-python mr-2" style="color: #3776AB;"></i>Python
+                                </span>
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fab fa-java mr-2" style="color: #007396;"></i>Java
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-globe text-xl mr-3 text-accent-blue"></i>
+                            <h3 class="step-title">Web Development</h3>
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fab fa-laravel mr-2" style="color: #FF2D20;"></i>Laravel
+                                </span>
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fab fa-react mr-2" style="color: #61DAFB;"></i>React
+                                </span>
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fab fa-js-square mr-2" style="color: #F7DF1E;"></i>JavaScript
+                                </span>
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fab fa-node-js mr-2" style="color: #339933;"></i>NodeJS
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-desktop text-xl mr-3 text-accent-orange"></i>
+                            <h3 class="step-title">Operating Systems</h3>
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fab fa-windows mr-2" style="color: #0078D7;"></i>Windows
+                                </span>
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fab fa-linux mr-2" style="color: #FCC624;"></i>Linux Server
+                                </span>
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fab fa-ubuntu mr-2" style="color: #E95420;"></i>Ubuntu
+                                </span>
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fab fa-redhat mr-2" style="color: #EE0000;"></i>Debian
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-network-wired text-xl mr-3 text-accent-green"></i>
+                            <h3 class="step-title">Networking & Tools</h3>
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fas fa-wifi mr-2" style="color: #0066CC;"></i>LAN/WAN
+                                </span>
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fas fa-satellite-dish mr-2" style="color: #00CC66;"></i>IoT
+                                </span>
+                                <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                    <i class="fas fa-server mr-2" style="color: #FF6600;"></i>BMS
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project Experience -->
+            <div class="mt-8">
+                <h3 class="text-lg font-semibold mb-4 text-accent-green">
+                    <i class="fas fa-project-diagram"></i> Project Experience
+                </h3>
+                
+                <div class="step">
+                    <div class="step-number"><i class="fas fa-hospital"></i></div>
+                    <h3 class="step-title">ANAH Integrated Medical Information System</h3>
+                    <p class="step-description">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Senior project developed to centralize and integrate patient medical records from different hospitals
+                    </p>
+                    <div class="mt-4">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                <i class="fab fa-php mr-2"></i>PHP
+                            </span>
+                            <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                <i class="fab fa-bootstrap mr-2"></i>Bootstrap
+                            </span>
+                            <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                <i class="fab fa-js-square mr-2"></i>JavaScript
+                            </span>
+                            <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                <i class="fas fa-database mr-2"></i>MySQL
+                            </span>
+                            <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                <i class="fab fa-html5 mr-2"></i>HTML5
+                            </span>
+                            <span class="px-3 py-2 bg-bg-tertiary rounded-lg text-sm flex items-center">
+                                <i class="fab fa-css3-alt mr-2"></i>CSS3
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tip-box mt-4">
+                    <div class="box-title"><i class="fas fa-microchip"></i> Architecture Experience</div>
+                    <p>
+                        <i class="fas fa-cogs mr-2"></i>
+                        Gained valuable experience in Microservices Architecture and learned how to integrate different programming languages within a system. 
+                        Hands-on experience in building scalable applications with seamless communication between components.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- References -->
+            <div class="mt-8">
+                <h3 class="text-lg font-semibold mb-4 text-accent-orange">
+                    <i class="fas fa-user-tie"></i> Professional Reference
+                </h3>
+                
+                <div class="step">
+                    <div class="step-number"><i class="fas fa-building"></i></div>
+                    <h3 class="step-title">Al-Afia S.C</h3>
+                    <p class="step-description">
+                        <i class="fas fa-briefcase mr-2"></i>
+                        Currently working as an IT Specialist at Al-Afia S.C (Head Quarter)
+                    </p>
+                    <div class="flex items-center text-sm text-text-secondary mt-3">
+                        <i class="fas fa-envelope mr-2"></i>
+                        <span>Available upon request</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-envelope"></i> Get In Touch
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Contact Information -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact Information</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-accent-blue/20 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-phone text-accent-blue"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm text-text-secondary">Phone</div>
+                                <a href="tel:0913082128" class="text-accent-blue hover:underline">0913082128</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-accent-green/20 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-envelope text-accent-green"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm text-text-secondary">Email</div>
+                                <a href="mailto:amishashems@gmail.com" class="text-accent-blue hover:underline">amishashems@gmail.com</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-accent-orange/20 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fab fa-linkedin text-accent-orange"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm text-text-secondary">LinkedIn</div>
+                                <a href="https://linkedin.com/in/amishashems" target="_blank" class="text-accent-blue hover:underline">linkedin.com/in/amishashems</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fab fa-github text-purple-500"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm text-text-secondary">GitHub</div>
+                                <a href="https://github.com/AmirShemsu" target="_blank" class="text-accent-blue hover:underline">github.com/AmirShemsu</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="success-box mt-6">
+                        <div class="box-title"><i class="fas fa-clock"></i> Availability</div>
+                        <p>Typically respond within 2 hours during business days. Available for both remote and on-site consultations.</p>
+                    </div>
+                </div>
+                
+                <!-- Quick Contact Form -->
+                <div class="contact-form">
+                    <h3 class="text-lg font-semibold mb-4">Send a Message</h3>
+                    
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label class="form-label" for="name">Name</label>
+                            <input type="text" id="name" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email</label>
+                            <input type="email" id="email" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="subject">Subject</label>
+                            <input type="text" id="subject" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="message">Message</label>
+                            <textarea id="message" class="form-input" rows="4" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane mr-2"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    <!-- Footer -->
+    <footer class="mt-12 pt-8 border-t border-border-color text-center text-text-tertiary text-sm">
+        <p>© 2026 Amir Shemsu | Jr. Full-Stack Developer & Network Engineer</p>
+        <p class="mt-2">Phone: 0913082128 | Email: amishashems@gmail.com</p>
+        <p class="mt-2">
+            <a href="https://linkedin.com/in/amishashems" class="text-accent-blue hover:underline mx-2">LinkedIn</a> | 
+            <a href="https://github.com/AmirShemsu" class="text-accent-blue hover:underline mx-2">GitHub</a> |
+            <a href="https://alafiasc.com" class="text-accent-blue hover:underline mx-2">Al-Afiya SC</a>
+        </p>
+        <p class="mt-4 text-xs">Built with precision and attention to detail</p>
+    </footer>
+</main>
+
+<script src="./assets/js/script.js"></script>
+</body>
+</html>

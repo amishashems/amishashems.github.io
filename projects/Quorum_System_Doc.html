@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assembly Quorum System Documentation | Amir Shemsu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap');
+        
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1c1c1e;
+            --bg-tertiary: #2c2c2e;
+            --text-primary: #ffffff;
+            --text-secondary: #98989d;
+            --text-tertiary: #6c6c70;
+            --accent-blue: #007aff;
+            --accent-green: #34c759;
+            --accent-orange: #ff9500;
+            --accent-red: #ff3b30;
+            --border-color: #3a3a3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .code-text {
+            font-family: 'Source Code Pro', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .profile-section {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .profile-title {
+            font-size: 12px;
+            color: var(--accent-blue);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .contact-info {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            line-height: 1.8;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 100%;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 101;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 44px;
+            height: 44px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            font-size: 20px;
+        }
+
+        /* Step-by-Step Guide */
+        .step-container {
+            counter-reset: step-counter;
+            margin: 30px 0;
+        }
+
+        .step {
+            position: relative;
+            padding: 25px;
+            margin-bottom: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .step-number {
+            position: absolute;
+            left: -15px;
+            top: 20px;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Command Box */
+        .command-box {
+            background: #1a1a1a;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .command-header {
+            background: #2a2a2a;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .command-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .copy-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: 'SF Pro Display', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #0056cc;
+        }
+
+        .copy-btn.copied {
+            background: var(--accent-green);
+        }
+
+        .command-content {
+            padding: 20px;
+            font-family: 'Source Code Pro', monospace;
+            color: #e0e0e0;
+            font-size: 14px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .command-line {
+            margin-bottom: 8px;
+        }
+
+        .command-comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .command-prompt {
+            color: #569cd6;
+            margin-right: 10px;
+        }
+
+        /* Tables */
+        .simple-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .simple-table th {
+            background: var(--bg-secondary);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .simple-table td {
+            padding: 12px 15px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .simple-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Tips & Notes */
+        .tip-box {
+            background: rgba(0, 122, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-orange);
+        }
+
+        .success-box {
+            background: rgba(52, 199, 89, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .box-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        /* Architecture Diagram */
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .arch-card {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s;
+        }
+
+        .arch-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-blue);
+        }
+
+        .arch-icon {
+            font-size: 40px;
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+        }
+
+        /* Progress Indicator */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .chart-container canvas {
+            max-width: 400px;
+            max-height: 300px;
+            margin: 0 auto;
+        }
+
+        /* Image Styling */
+        .image-description {
+            margin-top: 15px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .quorum-visual {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .quorum-stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 20px;
+            min-width: 200px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Code Snippet Styling */
+        .code-snippet {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .code-snippet pre {
+            margin: 0;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #e0e0e0;
+        }
+
+        .code-keyword {
+            color: #569cd6;
+        }
+
+        .code-string {
+            color: #ce9178;
+        }
+
+        .code-comment {
+            color: #6a9955;
+        }
+
+        .code-function {
+            color: #dcdcaa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <div class="profile-name">Amir Shemsu</div>
+            <div class="profile-title">Jr. IT Specialist</div>
+            <div class="contact-info">
+                <button id="contact-toggle-btn" onclick="toggleContactInfo()" class="copy-btn" style="margin-top: 10px;">Show Contact</button>
+                <div id="contact-list" style="display: none; margin-top: 15px;">
+                    <ul style="list-style: none; padding: 0; text-align: left; display: inline-block;">
+                        <li style="margin-bottom: 8px;"><i class="fas fa-phone" style="width: 20px; text-align: center;"></i> <a href="tel:0913082128" style="color: var(--accent-blue); text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">0913082128</a></li>
+                        <li style="margin-bottom: 8px;"><i class="fas fa-envelope" style="width: 20px; text-align: center;"></i> <a href="mailto:amishashems@gmail.com" style="color: var(--accent-blue); text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">amishashems@gmail.com</a></li>
+                        <li style="margin-bottom: 8px;"><i class="fab fa-linkedin" style="width: 20px; text-align: center;"></i> <a href="https://linkedin.com/in/amishashems" target="_blank" style="color: var(--accent-blue); text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">linkedin.com/in/amishashems</a></li>
+                        <li style="margin-bottom: 8px;"><i class="fab fa-github" style="width: 20px; text-align: center;"></i> <a href="https://github.com/AmirShemsu" target="_blank" style="color: var(--accent-blue); text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">github.com/AmirShemsu</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Input -->
+        <div class="search-container" style="padding: 0 20px 20px;">
+            <div style="position: relative;">
+                <i class="fas fa-search" style="position: absolute; top: 13px; left: 15px; color: var(--text-tertiary);"></i>
+                <input type="text" id="searchInput" placeholder="Search documentation..." onkeyup="searchDocs()" style="width: 100%; padding: 12px 12px 12px 40px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 14px;">
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="sidebar-steps">
+            <h3 class="text-lg font-semibold mb-4">Documentation Sections</h3>
+            
+            <div class="step-nav">
+                <a href="#overview" class="step-nav-item">
+                    <div class="step-nav-number">1</div>
+                    <div class="step-nav-text">System Overview</div>
+                </a>
+                
+                <a href="#architecture" class="step-nav-item">
+                    <div class="step-nav-number">2</div>
+                    <div class="step-nav-text">System Architecture</div>
+                </a>
+                
+                <a href="#quorum-calc" class="step-nav-item">
+                    <div class="step-nav-number">3</div>
+                    <div class="step-nav-text">Quorum Calculation</div>
+                </a>
+                
+                <a href="#database" class="step-nav-item">
+                    <div class="step-nav-number">4</div>
+                    <div class="step-nav-text">Database Design</div>
+                </a>
+                
+                <a href="#backend" class="step-nav-item">
+                    <div class="step-nav-number">5</div>
+                    <div class="step-nav-text">PHP Backend</div>
+                </a>
+                
+                <a href="#frontend" class="step-nav-item">
+                    <div class="step-nav-number">6</div>
+                    <div class="step-nav-text">Frontend Implementation</div>
+                </a>
+                
+                <a href="#api" class="step-nav-item">
+                    <div class="step-nav-number">7</div>
+                    <div class="step-nav-text">API Endpoints</div>
+                </a>
+
+                <a href="#visualization" class="step-nav-item">
+                    <div class="step-nav-number">8</div>
+                    <div class="step-nav-text">Visualization</div>
+                </a>
+            </div>
+
+            <style>
+                .step-nav-item {
+                    display: flex;
+                    align-items: center;
+                    padding: 12px;
+                    margin: 5px 0;
+                    background: var(--bg-tertiary);
+                    border-radius: 8px;
+                    text-decoration: none;
+                    color: var(--text-secondary);
+                    transition: all 0.2s;
+                }
+
+                .step-nav-item:hover {
+                    background: var(--accent-blue);
+                    color: white;
+                }
+
+                .step-nav-number {
+                    width: 24px;
+                    height: 24px;
+                    background: var(--border-color);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 12px;
+                    font-weight: 600;
+                    margin-right: 10px;
+                }
+
+                .step-nav-item:hover .step-nav-number {
+                    background: white;
+                    color: var(--accent-blue);
+                }
+
+                .step-nav-text {
+                    font-size: 14px;
+                }
+            </style>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="mt-8">
+            <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+            <div class="space-y-2">
+                <a href="#quorum-formula" class="block p-3 bg-bg-tertiary rounded-lg text-sm hover:bg-accent-blue hover:text-white transition">Quorum Formula</a>
+                <a href="#code-examples" class="block p-3 bg-bg-tertiary rounded-lg text-sm hover:bg-accent-blue hover:text-white transition">Code Examples</a>
+                <a href="#sql-schema" class="block p-3 bg-bg-tertiary rounded-lg text-sm hover:bg-accent-blue hover:text-white transition">SQL Schema</a>
+                <a href="#api-endpoints" class="block p-3 bg-bg-tertiary rounded-lg text-sm hover:bg-accent-blue hover:text-white transition">API Endpoints</a>
+            </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="mt-8 pt-6 border-t border-border-color">
+            <div class="text-sm mb-2">Documentation Progress</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="sidebarProgress" style="width: 14%"></div>
+            </div>
+            <div class="text-xs text-text-tertiary mt-2" id="progressText">Section 1 of 8</div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="mb-10">
+            <h1 class="text-4xl font-bold mb-4">Assembly Quorum System Documentation</h1>
+            <p class="text-lg text-text-secondary">Complete technical documentation for the Assembly Meeting Quorum Management System</p>
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="section-card text-center" style="display: none;">
+            <h2 class="text-2xl font-semibold mb-4">No Results Found</h2>
+            <p class="text-text-secondary">Your search did not match any sections. Please try a different term.</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container mb-8">
+            <div class="progress-bar" id="mainProgress" style="width: 14%"></div>
+        </div>
+
+        <!-- Overview Section -->
+        <section id="overview" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-info-circle"></i> System Overview
+            </h2>
+            
+            <p class="text-text-secondary mb-6">The Assembly Quorum System is designed to manage and track attendance for assembly meetings, calculating whether quorum requirements are met based on shares/stock ownership.</p>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">System Purpose</h3>
+                <p class="step-description">Track member attendance and calculate quorum status for assembly meetings in real-time.</p>
+                
+                <div class="simple-table">
+                    <table>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>Member Management</td>
+                            <td>Track all assembly members with their share counts</td>
+                        </tr>
+                        <tr>
+                            <td>Attendance Tracking</td>
+                            <td>Real-time check-in/check-out for meetings</td>
+                        </tr>
+                        <tr>
+                            <td>Quorum Calculation</td>
+                            <td>Automatic calculation based on shares present</td>
+                        </tr>
+                        <tr>
+                            <td>Real-time Updates</td>
+                            <td>Live dashboard showing quorum status</td>
+                        </tr>
+                        <tr>
+                            <td>Reporting</td>
+                            <td>Generate attendance and quorum reports</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Key Requirements</h3>
+                <p class="step-description">The system must handle specific quorum calculation rules.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Quorum Requirements</div>
+                        <button class="copy-btn" onclick="copyText(this, 'Quorum = (Total Shares Present / Total Shares Issued) × 100%\nMinimum Required: 25% of total shares must be present\nShares represented can be via proxy votes\nReal-time calculation during meeting')">Copy Requirements</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">• Quorum calculated based on share ownership</div>
+                        <div class="command-line">• Minimum 25% of total shares must be present</div>
+                        <div class="command-line">• Members can represent multiple shares</div>
+                        <div class="command-line">• Proxy votes count toward quorum</div>
+                        <div class="command-line">• Real-time updates during meeting</div>
+                        <div class="command-line">• Historical tracking of all meetings</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Section -->
+        <section id="architecture" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-sitemap"></i> System Architecture
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Three-Tier Architecture</h3>
+                <p class="step-description">Modern web application with clear separation of concerns.</p>
+                
+                <div class="architecture-grid">
+                    <div class="arch-card">
+                        <div class="arch-icon">
+                            <i class="fab fa-php"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">PHP Backend</h3>
+                        <p class="text-sm text-text-secondary">RESTful API with MVC pattern</p>
+                    </div>
+                    
+                    <div class="arch-card">
+                        <div class="arch-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">MySQL Database</h3>
+                        <p class="text-sm text-text-secondary">Normalized relational database</p>
+                    </div>
+                    
+                    <div class="arch-card">
+                        <div class="arch-icon">
+                            <i class="fab fa-js"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">JavaScript Frontend</h3>
+                        <p class="text-sm text-text-secondary">Real-time updates with AJAX</p>
+                    </div>
+                    
+                    <div class="arch-card">
+                        <div class="arch-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">Visualization</h3>
+                        <p class="text-sm text-text-secondary">Charts and real-time dashboards</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Architecture Flow Diagram</h3>
+                <p class="step-description">Visual representation of system components and data flow.</p>
+                
+                <div class="chart-container">
+                    <canvas id="architectureChart"></canvas>
+                    <p class="image-description">System Architecture Components Distribution</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quorum Calculation Section -->
+        <section id="quorum-calc" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-calculator"></i> Quorum Calculation
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title" id="quorum-formula">Quorum Formula</h3>
+                <p class="step-description">The mathematical formula used to determine if quorum is met.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Quorum Calculation Formula</div>
+                        <button class="copy-btn" onclick="copyText(this, 'Quorum Percentage = (Total Shares Present / Total Shares Issued) × 100\nQuorum Met = Quorum Percentage ≥ Required Percentage (25%)')">Copy Formula</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Quorum Percentage = (Σ Shares Present / Σ Total Shares) × 100</div>
+                        <div class="command-line">Where:</div>
+                        <div class="command-line">• Σ Shares Present = Sum of shares represented by present members</div>
+                        <div class="command-line">• Σ Total Shares = Total shares issued to all members</div>
+                        <div class="command-line">• Required Percentage = 25% (configurable)</div>
+                        <div class="command-line">• Quorum Met = Quorum Percentage ≥ Required Percentage</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Example Calculation</h3>
+                <p class="step-description">Practical example of quorum calculation.</p>
+                
+                <div class="quorum-visual">
+                    <div class="quorum-stats">
+                        <div class="stat-card">
+                            <div class="stat-value">95,043</div>
+                            <div class="stat-label">Total Shares Issued</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Shares Present</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">23,761</div>
+                            <div class="stat-label">Required (25%)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">0%</div>
+                            <div class="stat-label">Current Quorum</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container mt-6">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                    <p class="text-text-secondary mt-2">0/95,043 shares present (0%) - Quorum NOT MET</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Database Design Section -->
+        <section id="database" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-database"></i> Database Design
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title" id="sql-schema">MySQL Schema</h3>
+                <p class="step-description">Normalized database design for assembly management.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Core Database Tables</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy SQL</button>
+                    </div>
+                    <div class="command-content code-text">
+-- Members Table
+CREATE TABLE members (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    member_code VARCHAR(20) UNIQUE NOT NULL,
+    full_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    email VARCHAR(100),
+    shares_owned INT DEFAULT 0,
+    member_type ENUM('regular', 'board', 'guest') DEFAULT 'regular',
+    status ENUM('active', 'inactive', 'suspended') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Meetings Table
+CREATE TABLE meetings (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    meeting_code VARCHAR(50) UNIQUE NOT NULL,
+    title VARCHAR(200) NOT NULL,
+    meeting_date DATETIME NOT NULL,
+    quorum_required_percentage INT DEFAULT 25,
+    total_shares_required INT AS (total_shares_issued * quorum_required_percentage / 100),
+    status ENUM('scheduled', 'in_progress', 'completed', 'cancelled') DEFAULT 'scheduled',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Attendance Table
+CREATE TABLE attendance (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    meeting_id INT NOT NULL,
+    member_id INT NOT NULL,
+    attendance_status ENUM('present', 'absent', 'proxy') DEFAULT 'absent',
+    shares_present INT DEFAULT 0,
+    check_in_time DATETIME,
+    check_out_time DATETIME,
+    FOREIGN KEY (meeting_id) REFERENCES meetings(id) ON DELETE CASCADE,
+    FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_attendance (meeting_id, member_id)
+);
+
+-- Shares Table
+CREATE TABLE shares (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    member_id INT NOT NULL,
+    share_count INT NOT NULL,
+    share_type VARCHAR(50),
+    issued_date DATE,
+    FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE
+);
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Database Relationships</h3>
+                <p class="step-description">Visual representation of table relationships.</p>
+                
+                <div class="chart-container">
+                    <canvas id="databaseChart"></canvas>
+                    <p class="image-description">Database Table Relationships</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHP Backend Section -->
+        <section id="backend" class="section-card">
+            <h2 class="card-title">
+                <i class="fab fa-php"></i> PHP Backend Implementation
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title" id="code-examples">Quorum Calculation Class</h3>
+                <p class="step-description">PHP class for calculating quorum status.</p>
+                
+                <div class="code-snippet">
+<pre><span class="code-keyword">&lt;?php</span>
+<span class="code-keyword">class</span> <span class="code-function">QuorumCalculator</span> {
+    <span class="code-keyword">private</span> $db;
+    
+    <span class="code-keyword">public function</span> <span class="code-function">__construct</span>($db) {
+        <span class="code-keyword">$this</span>-&gt;db = $db;
+    }
+    
+    <span class="code-comment">// Calculate quorum for a specific meeting</span>
+    <span class="code-keyword">public function</span> <span class="code-function">calculateQuorum</span>($meetingId) {
+        <span class="code-comment">// Get total shares issued</span>
+        $totalSharesQuery = <span class="code-string">"SELECT SUM(shares_owned) as total_shares FROM members WHERE status = 'active'"</span>;
+        $totalSharesResult = <span class="code-keyword">$this</span>-&gt;db-&gt;query($totalSharesQuery);
+        $totalShares = $totalSharesResult-&gt;fetch_assoc()[<span class="code-string">'total_shares'</span>] ?? 0;
+        
+        <span class="code-comment">// Get shares present in meeting</span>
+        $presentSharesQuery = <span class="code-string">"SELECT SUM(a.shares_present) as present_shares 
+            FROM attendance a 
+            JOIN members m ON a.member_id = m.id 
+            WHERE a.meeting_id = ? AND a.attendance_status IN ('present', 'proxy')"</span>;
+        
+        $stmt = <span class="code-keyword">$this</span>-&gt;db-&gt;prepare($presentSharesQuery);
+        $stmt-&gt;bind_param(<span class="code-string">"i"</span>, $meetingId);
+        $stmt-&gt;execute();
+        $presentResult = $stmt-&gt;get_result();
+        $presentShares = $presentResult-&gt;fetch_assoc()[<span class="code-string">'present_shares'</span>] ?? 0;
+        
+        <span class="code-comment">// Calculate percentage</span>
+        $percentage = ($totalShares &gt; 0) ? ($presentShares / $totalShares) * 100 : 0;
+        
+        <span class="code-comment">// Get required percentage from meeting settings</span>
+        $meetingQuery = <span class="code-string">"SELECT quorum_required_percentage FROM meetings WHERE id = ?"</span>;
+        $stmt = <span class="code-keyword">$this</span>-&gt;db-&gt;prepare($meetingQuery);
+        $stmt-&gt;bind_param(<span class="code-string">"i"</span>, $meetingId);
+        $stmt-&gt;execute();
+        $meetingResult = $stmt-&gt;get_result();
+        $meeting = $meetingResult-&gt;fetch_assoc();
+        
+        $requiredPercentage = $meeting[<span class="code-string">'quorum_required_percentage'</span>] ?? 25;
+        $requiredShares = ($totalShares * $requiredPercentage) / 100;
+        
+        <span class="code-keyword">return</span> [
+            <span class="code-string">'total_shares'</span> =&gt; $totalShares,
+            <span class="code-string">'present_shares'</span> =&gt; $presentShares,
+            <span class="code-string">'percentage'</span> =&gt; round($percentage, 2),
+            <span class="code-string">'required_percentage'</span> =&gt; $requiredPercentage,
+            <span class="code-string">'required_shares'</span> =&gt; ceil($requiredShares),
+            <span class="code-string">'quorum_met'</span> =&gt; $percentage &gt;= $requiredPercentage,
+            <span class="code-string">'remaining_shares'</span> =&gt; max(0, ceil($requiredShares) - $presentShares)
+        ];
+    }
+    
+    <span class="code-comment">// Update attendance status</span>
+    <span class="code-keyword">public function</span> <span class="code-function">updateAttendance</span>($meetingId, $memberId, $status, $sharesPresent) {
+        $query = <span class="code-string">"INSERT INTO attendance (meeting_id, member_id, attendance_status, shares_present, check_in_time) 
+                 VALUES (?, ?, ?, ?, NOW()) 
+                 ON DUPLICATE KEY UPDATE 
+                 attendance_status = VALUES(attendance_status), 
+                 shares_present = VALUES(shares_present),
+                 check_in_time = IF(VALUES(attendance_status) = 'present', NOW(), check_in_time),
+                 check_out_time = IF(VALUES(attendance_status) = 'absent', NOW(), NULL)"</span>;
+        
+        $stmt = <span class="code-keyword">$this</span>-&gt;db-&gt;prepare($query);
+        $stmt-&gt;bind_param(<span class="code-string">"iisi"</span>, $meetingId, $memberId, $status, $sharesPresent);
+        
+        <span class="code-keyword">return</span> $stmt-&gt;execute();
+    }
+}
+<span class="code-keyword">?&gt;</span></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Frontend Implementation Section -->
+        <section id="frontend" class="section-card">
+            <h2 class="card-title">
+                <i class="fab fa-js"></i> Frontend Implementation
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Real-time Quorum Dashboard</h3>
+                <p class="step-description">JavaScript for live quorum updates.</p>
+                
+                <div class="code-snippet">
+<pre><span class="code-keyword">class</span> <span class="code-function">QuorumDashboard</span> {
+    <span class="code-function">constructor</span>(apiUrl, meetingId) {
+        <span class="code-keyword">this</span>.apiUrl = apiUrl;
+        <span class="code-keyword">this</span>.meetingId = meetingId;
+        <span class="code-keyword">this</span>.pollingInterval = 5000; <span class="code-comment">// 5 seconds</span>
+        <span class="code-keyword">this</span>.init();
+    }
+    
+    <span class="code-function">async</span> <span class="code-function">init</span>() {
+        <span class="code-keyword">await this</span>.loadQuorumData();
+        <span class="code-keyword">this</span>.startPolling();
+        <span class="code-keyword">this</span>.setupEventListeners();
+    }
+    
+    <span class="code-function">async</span> <span class="code-function">loadQuorumData</span>() {
+        <span class="code-keyword">try</span> {
+            <span class="code-keyword">const</span> response = <span class="code-keyword">await</span> fetch(<span class="code-string">`<span class="code-keyword">${this</span>.apiUrl}/meeting/<span class="code-keyword">${this</span>.meetingId}/quorum`</span>);
+            <span class="code-keyword">const</span> data = <span class="code-keyword">await</span> response.json();
+            
+            <span class="code-keyword">this</span>.updateDashboard(data);
+            <span class="code-keyword">this</span>.updateProgressBar(data.percentage);
+            <span class="code-keyword">this</span>.updateMemberList(data.attendance);
+            
+        } <span class="code-keyword">catch</span> (error) {
+            console.error(<span class="code-string">'Failed to load quorum data:'</span>, error);
+        }
+    }
+    
+    <span class="code-function">updateProgressBar</span>(percentage) {
+        <span class="code-keyword">const</span> progressBar = document.getElementById(<span class="code-string">'quorum-progress-bar'</span>);
+        <span class="code-keyword">const</span> percentageText = document.getElementById(<span class="code-string">'quorum-percentage'</span>);
+        
+        <span class="code-keyword">if</span> (progressBar) {
+            progressBar.style.width = <span class="code-string">`<span class="code-keyword">${percentage</span>}%`</span>;
+            progressBar.style.backgroundColor = percentage &gt;= 25 ? 
+                <span class="code-string">'var(--accent-green)'</span> : <span class="code-string">'var(--accent-red)'</span>;
+        }
+        
+        <span class="code-keyword">if</span> (percentageText) {
+            percentageText.textContent = <span class="code-string">`<span class="code-keyword">${percentage</span>.toFixed(1)}%`</span>;
+        }
+    }
+    
+    <span class="code-function">updateDashboard</span>(data) {
+        document.getElementById(<span class="code-string">'total-shares'</span>).textContent = 
+            data.total_shares.toLocaleString();
+        document.getElementById(<span class="code-string">'present-shares'</span>).textContent = 
+            data.present_shares.toLocaleString();
+        document.getElementById(<span class="code-string">'required-shares'</span>).textContent = 
+            data.required_shares.toLocaleString();
+        document.getElementById(<span class="code-string">'quorum-status'</span>).textContent = 
+            data.quorum_met ? <span class="code-string">'QUORUM MET'</span> : <span class="code-string">'QUORUM NOT MET'</span>;
+        document.getElementById(<span class="code-string">'quorum-status'</span>).className = 
+            data.quorum_met ? <span class="code-string">'status-met'</span> : <span class="code-string">'status-not-met'</span>;
+    }
+    
+    <span class="code-function">startPolling</span>() {
+        setInterval(() =&gt; {
+            <span class="code-keyword">this</span>.loadQuorumData();
+        }, <span class="code-keyword">this</span>.pollingInterval);
+    }
+    
+    <span class="code-function">setupEventListeners</span>() {
+        <span class="code-comment">// Handle member check-in/check-out</span>
+        document.querySelectorAll(<span class="code-string">'.attendance-toggle'</span>).forEach(button =&gt; {
+            button.addEventListener(<span class="code-string">'click'</span>, (e) =&gt; {
+                <span class="code-keyword">const</span> memberId = e.target.dataset.memberId;
+                <span class="code-keyword">const</span> currentStatus = e.target.dataset.status;
+                <span class="code-keyword">const</span> newStatus = currentStatus === <span class="code-string">'present'</span> ? <span class="code-string">'absent'</span> : <span class="code-string">'present'</span>;
+                
+                <span class="code-keyword">this</span>.updateMemberAttendance(memberId, newStatus);
+            });
+        });
+    }
+    
+    <span class="code-function">async</span> <span class="code-function">updateMemberAttendance</span>(memberId, status) {
+        <span class="code-keyword">try</span> {
+            <span class="code-keyword">const</span> response = <span class="code-keyword">await</span> fetch(<span class="code-string">`<span class="code-keyword">${this</span>.apiUrl}/attendance/update`</span>, {
+                method: <span class="code-string">'POST'</span>,
+                headers: { <span class="code-string">'Content-Type'</span>: <span class="code-string">'application/json'</span> },
+                body: JSON.stringify({
+                    meeting_id: <span class="code-keyword">this</span>.meetingId,
+                    member_id: memberId,
+                    status: status
+                })
+            });
+            
+            <span class="code-keyword">if</span> (response.ok) {
+                <span class="code-keyword">await this</span>.loadQuorumData();
+            }
+        } <span class="code-keyword">catch</span> (error) {
+            console.error(<span class="code-string">'Failed to update attendance:'</span>, error);
+        }
+    }
+}</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Endpoints Section -->
+        <section id="api" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-code"></i> API Endpoints
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title" id="api-endpoints">REST API Endpoints</h3>
+                <p class="step-description">Complete REST API for quorum management.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Meeting Management</div>
+                        <button class="copy-btn" onclick="copyText(this, 'GET /api/meetings - List all meetings\nPOST /api/meetings - Create new meeting\nGET /api/meetings/{id}/quorum - Get quorum status\nGET /api/meetings/{id}/attendance - Get attendance list')">Copy Endpoints</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line"><span class="command-prompt">GET</span> /api/meetings</div>
+                        <div class="command-line comment"># List all meetings</div>
+                        
+                        <div class="command-line"><span class="command-prompt">POST</span> /api/meetings</div>
+                        <div class="command-line comment"># Create new meeting</div>
+                        
+                        <div class="command-line"><span class="command-prompt">GET</span> /api/meetings/{id}/quorum</div>
+                        <div class="command-line comment"># Get quorum status for specific meeting</div>
+                        
+                        <div class="command-line"><span class="command-prompt">GET</span> /api/meetings/{id}/attendance</div>
+                        <div class="command-line comment"># Get attendance list for meeting</div>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Member & Attendance</div>
+                        <button class="copy-btn" onclick="copyText(this, 'GET /api/members - List all members\nPOST /api/attendance/update - Update attendance\nGET /api/dashboard/stats - Get dashboard statistics')">Copy Endpoints</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line"><span class="command-prompt">GET</span> /api/members</div>
+                        <div class="command-line comment"># List all members with share counts</div>
+                        
+                        <div class="command-line"><span class="command-prompt">POST</span> /api/attendance/update</div>
+                        <div class="command-line comment"># Update member attendance status</div>
+                        
+                        <div class="command-line"><span class="command-prompt">GET</span> /api/dashboard/stats</div>
+                        <div class="command-line comment"># Get dashboard statistics</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visualization Section -->
+        <section id="visualization" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-chart-bar"></i> Visualization & Reports
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Real-time Dashboard</h3>
+                <p class="step-description">Visual representation of quorum status and member attendance.</p>
+                
+                <div class="quorum-visual">
+                    <h4 class="text-lg font-semibold mb-4">የአባላት መቆጣጠሪያ አቴንዳንስ (ዛሬ)</h4>
+                    
+                    <div class="simple-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>የአባላት ስም</th>
+                                    <th>ስልክ ቁጥር</th>
+                                    <th>የአክሲዮን መጠን</th>
+                                    <th>Status</th>
+                                    <th>የገቡበት ሰዓት</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>ህምዚ ሽምስዳን ዑስማን<br><small>ID: 533 • ተማሪ</small></td>
+                                    <td>0913181729</td>
+                                    <td>13</td>
+                                    <td><span class="text-accent-green">Present</span></td>
+                                    <td>-</td>
+                                    <td><button class="copy-btn" style="padding: 4px 8px; font-size: 11px;">Check Out</button></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>ሀፍሳ ሽምስዳን ዑስማን<br><small>ID: 531 • ተማሪ</small></td>
+                                    <td>0913181729</td>
+                                    <td>13</td>
+                                    <td><span class="text-accent-green">Present</span></td>
+                                    <td>-</td>
+                                    <td><button class="copy-btn" style="padding: 4px 8px; font-size: 11px;">Check Out</button></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>ሁዳ ሽምስዳን ዑስማን<br><small>ID: 530 • ተማሪ</small></td>
+                                    <td>0934436646</td>
+                                    <td>13</td>
+                                    <td><span class="text-accent-green">Present</span></td>
+                                    <td>-</td>
+                                    <td><button class="copy-btn" style="padding: 4px 8px; font-size: 11px;">Check Out</button></td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>ሄልዋ ሱልጣን ሽኩር<br><small>ID: 331 • ተማሪ</small></td>
+                                    <td>0911139834</td>
+                                    <td>50</td>
+                                    <td><span class="text-accent-green">Present</span></td>
+                                    <td>-</td>
+                                    <td><button class="copy-btn" style="padding: 4px 8px; font-size: 11px;">Check Out</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="progress-container mt-6">
+                        <div class="progress-bar" style="width: 25%"></div>
+                    </div>
+                    <p class="text-text-secondary mt-2">89/95,043 shares present (0.09%) - Quorum NOT MET</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Quorum Progress Visualization</h3>
+                <p class="step-description">Visual indicators showing quorum status.</p>
+                
+                <div class="chart-container">
+                    <canvas id="quorumChart"></canvas>
+                    <p class="image-description">Current Quorum Status Visualization</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-12 pt-8 border-t border-border-color text-center text-text-tertiary text-sm">
+            <p>Assembly Quorum System Documentation | Created by Amir Shemsu - Jr. IT Specialist</p>
+            <p class="mt-2">Phone: 0913082128 | Email: amishashems@gmail.com</p>
+            <p class="mt-2">
+                <a href="https://linkedin.com/in/amishashems" class="text-accent-blue hover:underline">LinkedIn</a> | 
+                <a href="https://github.com/AmirShemsu" class="text-accent-blue hover:underline">GitHub</a>
+            </p>
+        </footer>
+    </main>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            mobileMenuBtn.innerHTML = sidebar.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+
+        // Search functionality
+        function searchDocs() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const sections = document.querySelectorAll('.section-card');
+            const noResults = document.getElementById('noResults');
+            let visibleSections = 0;
+
+            sections.forEach(section => {
+                const txtValue = section.textContent || section.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    section.style.display = "";
+                    visibleSections++;
+                } else {
+                    section.style.display = "none";
+                }
+            });
+
+            noResults.style.display = visibleSections === 0 ? "" : "none";
+        }
+
+        // Toggle contact info
+        function toggleContactInfo() {
+            const contactList = document.getElementById('contact-list');
+            const toggleButton = document.getElementById('contact-toggle-btn');
+            
+            if (contactList.style.display === 'none') {
+                contactList.style.display = 'block';
+                toggleButton.textContent = 'Hide Contact';
+            } else {
+                contactList.style.display = 'none';
+                toggleButton.textContent = 'Show Contact';
+            }
+        }
+
+        // Copy code function
+        function copyCode(button) {
+            const codeContent = button.parentElement.nextElementSibling;
+            const textToCopy = codeContent.innerText;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Copy text function
+        function copyText(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Update progress when scrolling
+        function updateProgress() {
+            const sections = document.querySelectorAll('section');
+            const scrollPosition = window.scrollY + 100;
+            
+            let currentSection = 0;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.offsetTop;
+                if (scrollPosition >= sectionTop) {
+                    currentSection = index + 1;
+                }
+            });
+            
+            const progressPercentage = (currentSection / 8) * 100;
+            
+            document.getElementById('sidebarProgress').style.width = `${progressPercentage}%`;
+            document.getElementById('mainProgress').style.width = `${progressPercentage}%`;
+            document.getElementById('progressText').textContent = `Section ${currentSection} of 8`;
+        }
+
+        // Update progress on scroll
+        window.addEventListener('scroll', updateProgress);
+        updateProgress();
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // Close mobile menu if open
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                    
+                    // Scroll to element
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Architecture Chart
+        const archCtx = document.getElementById('architectureChart').getContext('2d');
+        new Chart(archCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['PHP Backend', 'MySQL Database', 'Frontend JS', 'API Layer', 'Security'],
+                datasets: [{
+                    data: [30, 25, 25, 15, 5],
+                    backgroundColor: [
+                        '#007aff',
+                        '#34c759',
+                        '#ff9500',
+                        '#af52de',
+                        '#ff3b30'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#ffffff',
+                            padding: 20,
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Database Chart
+        const dbCtx = document.getElementById('databaseChart').getContext('2d');
+        new Chart(dbCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Members', 'Meetings', 'Attendance', 'Shares'],
+                datasets: [{
+                    label: 'Table Record Counts',
+                    data: [549, 12, 1856, 95043],
+                    backgroundColor: 'rgba(0, 122, 255, 0.8)',
+                    borderColor: 'rgba(0, 122, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(58, 58, 60, 0.5)'
+                        },
+                        ticks: {
+                            color: '#98989d',
+                            callback: function(value) {
+                                if (value >= 1000000) {
+                                    return (value / 1000000).toFixed(1) + 'M';
+                                } else if (value >= 1000) {
+                                    return (value / 1000).toFixed(1) + 'K';
+                                }
+                                return value;
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#98989d'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#ffffff'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Quorum Chart
+        const quorumCtx = document.getElementById('quorumChart').getContext('2d');
+        new Chart(quorumCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Shares Present', 'Shares Required', 'Shares Remaining'],
+                datasets: [{
+                    data: [89, 23761, 23672],
+                    backgroundColor: [
+                        '#34c759',
+                        '#007aff',
+                        '#ff3b30'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#ffffff',
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.raw.toLocaleString() + ' shares';
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

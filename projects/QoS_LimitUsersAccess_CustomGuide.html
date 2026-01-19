@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TL-MR6400 VIP Lane Technical Guide | Amir Shemsu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap');
+        
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1c1c1e;
+            --bg-tertiary: #2c2c2e;
+            --text-primary: #ffffff;
+            --text-secondary: #98989d;
+            --text-tertiary: #6c6c70;
+            --accent-blue: #007aff;
+            --accent-green: #34c759;
+            --accent-orange: #ff9500;
+            --accent-red: #ff3b30;
+            --border-color: #3a3a3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .linux-code {
+            font-family: 'Source Code Pro', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .profile-section {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .profile-title {
+            font-size: 12px;
+            color: var(--accent-blue);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .contact-info {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            line-height: 1.8;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 100%;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 101;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 44px;
+            height: 44px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            font-size: 20px;
+        }
+
+        /* Step-by-Step Guide */
+        .step-container {
+            counter-reset: step-counter;
+            margin: 30px 0;
+        }
+
+        .step {
+            position: relative;
+            padding: 25px;
+            margin-bottom: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .step-number {
+            position: absolute;
+            left: -15px;
+            top: 20px;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Command Box */
+        .command-box {
+            background: #1a1a1a;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .command-header {
+            background: #2a2a2a;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .command-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .copy-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: 'SF Pro Display', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #0056cc;
+        }
+
+        .copy-btn.copied {
+            background: var(--accent-green);
+        }
+
+        .command-content {
+            padding: 20px;
+            font-family: 'Source Code Pro', monospace;
+            color: #e0e0e0;
+            font-size: 14px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .command-line {
+            margin-bottom: 8px;
+        }
+
+        .command-comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .command-prompt {
+            color: #569cd6;
+            margin-right: 10px;
+        }
+
+        /* Tables */
+        .simple-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .simple-table th {
+            background: var(--bg-secondary);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .simple-table td {
+            padding: 12px 15px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .simple-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Tips & Notes */
+        .tip-box {
+            background: rgba(0, 122, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-orange);
+        }
+
+        .success-box {
+            background: rgba(52, 199, 89, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .box-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        /* Progress Indicator */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 20px 0;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+        /* Improved Sidebar Navigation */
+        .step-nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin: 5px 0;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .step-nav-item:hover {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .step-nav-number {
+            width: 24px;
+            height: 24px;
+            background: var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .step-nav-item:hover .step-nav-number {
+            background: white;
+            color: var(--accent-blue);
+        }
+
+        .step-nav-text {
+            font-size: 14px;
+        }
+
+        /* Search input */
+        .search-input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        /* Fixed sidebar sections */
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+
+        .sidebar-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        /* Contact info styling */
+        .contact-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contact-list li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-list a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-list a:hover {
+            text-decoration: underline;
+        }
+
+        /* Quick links */
+        .quick-link {
+            display: block;
+            padding: 10px 15px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            margin: 5px 0;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .quick-link:hover {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        /* Address/Contact Card */
+        .address-card {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .address-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--accent-blue);
+        }
+
+        .address-line {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        /* Technical boxes */
+        .technical-note {
+            background: rgba(255, 59, 48, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-red);
+        }
+
+        .formula-box {
+            background: rgba(52, 199, 89, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .formula {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 18px;
+            color: var(--accent-green);
+            margin: 10px 0;
+        }
+
+        /* Diagram styling */
+        .diagram-container {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .diagram-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .diagram-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            min-width: 300px;
+        }
+
+        .diagram-arrow {
+            color: var(--accent-blue);
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <div class="profile-name">Amir Shemsu</div>
+            <div class="profile-title">Jr. IT Specialist</div>
+            <div class="contact-info">
+                <button id="contact-toggle-btn" onclick="toggleContactInfo()" class="copy-btn" style="margin-top: 10px; width: 100%;">
+                    <i class="fas fa-address-card"></i> Show Contact Info
+                </button>
+                <div id="contact-list" style="display: none; margin-top: 15px;">
+                    <div class="address-card">
+                        <div class="address-title">Contact Information</div>
+                        <div class="address-line"><i class="fas fa-phone"></i> <a href="tel:0913082128">0913082128</a></div>
+                        <div class="address-line"><i class="fas fa-envelope"></i> <a href="mailto:amishashems@gmail.com">amishashems@gmail.com</a></div>
+                        <div class="address-line"><i class="fab fa-linkedin"></i> <a href="https://linkedin.com/in/amishashems" target="_blank">linkedin.com/in/amishashems</a></div>
+                        <div class="address-line"><i class="fab fa-github"></i> <a href="https://github.com/AmirShemsu" target="_blank">github.com/AmirShemsu</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Input -->
+        <div class="sidebar-section">
+            <div style="position: relative;">
+                <i class="fas fa-search" style="position: absolute; top: 13px; left: 15px; color: var(--text-tertiary);"></i>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search guide..." onkeyup="searchGuide()">
+            </div>
+        </div>
+
+        <!-- Guide Sections -->
+        <div class="sidebar-section">
+            <h3 class="sidebar-section-title">VIP Lane Implementation Guide</h3>
+            
+            <div class="step-nav">
+                <a href="#introduction" class="step-nav-item">
+                    <div class="step-nav-number">1</div>
+                    <div class="step-nav-text">Introduction</div>
+                </a>
+                
+                <a href="#hardware-identification" class="step-nav-item">
+                    <div class="step-nav-number">2</div>
+                    <div class="step-nav-text">Hardware Identification</div>
+                </a>
+                
+                <a href="#foundational-config" class="step-nav-item">
+                    <div class="step-nav-number">3</div>
+                    <div class="step-nav-text">Foundation Configuration</div>
+                </a>
+                
+                <a href="#address-reservation" class="step-nav-item">
+                    <div class="step-nav-number">4</div>
+                    <div class="step-nav-text">Address Reservation</div>
+                </a>
+                
+                <a href="#bandwidth-control" class="step-nav-item">
+                    <div class="step-nav-number">5</div>
+                    <div class="step-nav-text">Bandwidth Control (Legacy)</div>
+                </a>
+                
+                <a href="#qos-modern" class="step-nav-item">
+                    <div class="step-nav-number">6</div>
+                    <div class="step-nav-text">QoS (Modern UI)</div>
+                </a>
+                
+                <a href="#limitations" class="step-nav-item">
+                    <div class="step-nav-number">7</div>
+                    <div class="step-nav-text">Operational Limitations</div>
+                </a>
+                
+                <a href="#mobile-management" class="step-nav-item">
+                    <div class="step-nav-number">8</div>
+                    <div class="step-nav-text">Mobile Management</div>
+                </a>
+
+                <a href="#advanced-security" class="step-nav-item">
+                    <div class="step-nav-number">9</div>
+                    <div class="step-nav-text">Advanced Security</div>
+                </a>
+                
+                <a href="#maintenance" class="step-nav-item">
+                    <div class="step-nav-number">10</div>
+                    <div class="step-nav-text">Maintenance & Recovery</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="sidebar-section">
+            <h3 class="sidebar-section-title">Quick Reference</h3>
+            <a href="#conversion-formula" class="quick-link"><i class="fas fa-calculator"></i> Bandwidth Conversion</a>
+            <a href="#ui-comparison" class="quick-link"><i class="fas fa-table"></i> UI Comparison Table</a>
+            <a href="#led-indicators" class="quick-link"><i class="fas fa-lightbulb"></i> LED Indicators</a>
+            <a href="#nat-boost-conflict" class="quick-link"><i class="fas fa-exclamation-triangle"></i> NAT Boost Conflict</a>
+        </div>
+
+        <!-- Theme Toggle -->
+        <div class="sidebar-section">
+            <button class="theme-toggle-btn" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+                <span>Switch to Light Mode</span>
+            </button>
+        </div>
+
+        <!-- Progress -->
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Guide Progress</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="sidebarProgress" style="width: 10%"></div>
+            </div>
+            <div class="text-xs text-text-tertiary mt-2" id="progressText">Section 1 of 10</div>
+        </div>
+
+        <!-- Contact Card -->
+        <div class="sidebar-section" style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border-color);">
+            <div class="address-card">
+                <div class="address-title">Amir Shemsu</div>
+                <div class="address-line"><i class="fas fa-phone"></i> 0913082128</div>
+                <div class="address-line"><i class="fas fa-envelope"></i> amishashems@gmail.com</div>
+                <div class="address-line"><i class="fas fa-map-marker-alt"></i> Jr. IT Specialist</div>
+                <div class="address-line" style="font-size: 11px; color: var(--text-tertiary); margin-top: 8px;">
+                    TP-Link TL-MR6400 VIP Lane Technical Guide
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="mb-10">
+            <h1 class="text-4xl font-bold mb-4">Strategic Optimization of Traffic Prioritization on the TP-Link TL-MR6400</h1>
+            <p class="text-lg text-text-secondary">A Technical Report on "VIP Lane" Implementation for Bandwidth-Constrained 4G LTE Environments</p>
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="section-card text-center" style="display: none;">
+            <h2 class="text-2xl font-semibold mb-4">No Results Found</h2>
+            <p class="text-text-secondary">Your search did not match any sections. Please try a different term.</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container mb-8">
+            <div class="progress-bar" id="mainProgress" style="width: 10%"></div>
+        </div>
+
+        <!-- Introduction -->
+        <section id="introduction" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-tachometer-alt"></i> Introduction: The VIP Lane Concept
+            </h2>
+            
+            <p class="text-text-secondary mb-6">The implementation of dedicated traffic lanes, colloquially referred to as "VIP lanes," on edge networking equipment like the TP-Link TL-MR6400 is a critical task for maintaining service level agreements in bandwidth-constrained environments.</p>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">The Challenge of Variable Backhaul</h3>
+                <p class="step-description">As an N300 4G LTE router, the TL-MR6400 is often deployed in scenarios where the backhaul is inherently variable—such as remote construction sites, temporary events, or rural residences—making the intelligent allocation of local resources paramount.</p>
+                
+                <div class="diagram-container">
+                    <div class="diagram-title">VIP Lane Network Architecture</div>
+                    <div class="diagram">
+                        <div class="diagram-line">
+                            <i class="fas fa-laptop-code" style="color: var(--accent-green);"></i>
+                            <span>VIP Device (Priority 1)</span>
+                        </div>
+                        <div class="diagram-arrow">↓</div>
+                        <div class="diagram-line">
+                            <i class="fas fa-wifi" style="color: var(--accent-blue);"></i>
+                            <span>TL-MR6400 Router with QoS</span>
+                        </div>
+                        <div class="diagram-arrow">↓</div>
+                        <div class="diagram-line">
+                            <i class="fas fa-satellite-dish" style="color: var(--accent-orange);"></i>
+                            <span>4G LTE Network (Variable)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Multi-Faceted Approach Requirements</h3>
+                <p class="step-description">Achieving a state where mission-critical devices, such as VoIP hardware or primary workstations, receive preferential treatment requires a multi-faceted approach involving:</p>
+                
+                <div class="simple-table">
+                    <table>
+                        <tr>
+                            <th>Component</th>
+                            <th>Purpose</th>
+                            <th>Implementation</th>
+                        </tr>
+                        <tr>
+                            <td>Static Identity Assignment</td>
+                            <td>Persistent device recognition</td>
+                            <td>Address Reservation</td>
+                        </tr>
+                        <tr>
+                            <td>Priority Queuing</td>
+                            <td>Traffic classification</td>
+                            <td>QoS / Bandwidth Control</td>
+                        </tr>
+                        <tr>
+                            <td>Rate-Limiting Protocols</td>
+                            <td>Bandwidth allocation</td>
+                            <td>Min/Max Kbps settings</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <div class="box-title"><i class="fas fa-lightbulb"></i> Technical Note</div>
+                <p>This report provides an exhaustive, granular guide for administrators to configure every setting adjustment across all hardware versions and firmware iterations of the TL-MR6400.</p>
+            </div>
+        </section>
+
+        <!-- Hardware Identification -->
+        <section id="hardware-identification" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-microchip"></i> Hardware Versioning and Interface Taxonomy
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Physical Revision Identification</h3>
+                <p class="step-description">The efficacy of any networking optimization is tethered to the underlying hardware and the software ecosystem it supports. The TP-Link TL-MR6400 has undergone several hardware revisions, ranging from V1 to V5.2, each bearing distinct implications for the management interface.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Hardware Identification Procedure</div>
+                        <button class="copy-btn" onclick="copyText(this, 'Locate physical label on router underside → Find VER X.X → Identify hardware version')">Copy Steps</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">1. Inspect the physical label on the underside of the router</div>
+                        <div class="command-line">2. Locate version string next to serial number (e.g., "VER 4.0")</div>
+                        <div class="command-line">3. Note the specific hardware version for configuration</div>
+                        <div class="command-line comment"># WARNING: US and EU firmware versions are NOT interchangeable</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Management Interface Bifurcation</h3>
+                <p class="step-description">The TL-MR6400 lifecycle is characterized by two primary user interface architectures:</p>
+                
+                <div id="ui-comparison" class="simple-table">
+                    <table>
+                        <tr>
+                            <th>Hardware Version</th>
+                            <th>UI Architecture</th>
+                            <th>Management URL</th>
+                            <th>Default Credentials</th>
+                        </tr>
+                        <tr>
+                            <td>V1 / V2</td>
+                            <td>Legacy Green UI</td>
+                            <td>http://tplinkwifi.net</td>
+                            <td>admin / admin</td>
+                        </tr>
+                        <tr>
+                            <td>V3 / V4 / V5</td>
+                            <td>Modern Blue UI</td>
+                            <td>http://tplinkmodem.net</td>
+                            <td>Set during first login</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="warning-box">
+                    <div class="box-title"><i class="fas fa-exclamation-triangle"></i> Critical Distinction</div>
+                    <p>The legacy interface (V1/V2) uses sidebar navigation with manual Bandwidth Control, while modern interfaces (V3+) use tabbed layout with automated QoS engine. Configuration paths differ significantly.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Foundational Configuration -->
+        <section id="foundational-config" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-cogs"></i> Foundational Configuration: Secure Local Access
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Web Interface Access Protocols</h3>
+                <p class="step-description">To establish a VIP lane, first ensure stable access to the router's management utility. The TL-MR6400 acts as a gateway for up to 32 simultaneous wireless devices and 4 wired LAN devices.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Connection Requirements</div>
+                        <button class="copy-btn" onclick="copyText(this, '1. Connect via Ethernet or Wi-Fi\n2. Use compatible browser (Chrome 20+, Firefox 12+, IE11+)\n3. Enable Java\n4. Set computer to DHCP mode')">Copy Checklist</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">✅ Wired connection (recommended for stability)</div>
+                        <div class="command-line">✅ Browser compatibility: Chrome 20+, Firefox 12+, IE11+</div>
+                        <div class="command-line">✅ Java enabled in browser</div>
+                        <div class="command-line">✅ Computer set to "Obtain IP automatically" (DHCP)</div>
+                        <div class="command-line comment"># Default gateway typically 192.168.0.1 or 192.168.1.1</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Operational Mode Selection</h3>
+                <p class="step-description">A critical technical nuance is the TL-MR6400's dual operation modes. Research indicates that features like Bandwidth Control or QoS are often conditionally available based on this selection.</p>
+                
+                <div class="simple-table">
+                    <table>
+                        <tr>
+                            <th>Mode</th>
+                            <th>Description</th>
+                            <th>VIP Lane Availability</th>
+                        </tr>
+                        <tr>
+                            <td>3G/4G Router Mode</td>
+                            <td>Uses integrated LTE modem</td>
+                            <td>Often limited or disabled</td>
+                        </tr>
+                        <tr>
+                            <td>Wireless Router Mode</td>
+                            <td>Connects to external modem via LAN/WAN</td>
+                            <td>Full QoS/Bandwidth Control</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Mode Configuration Path</div>
+                        <button class="copy-btn" onclick="copyText(this, 'Advanced → Operation Mode → Select mode → Reboot router')">Copy Path</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">1. Navigate to Advanced tab</div>
+                        <div class="command-line">2. Select Operation Mode</div>
+                        <div class="command-line">3. Choose desired setting</div>
+                        <div class="command-line">4. Save and wait for router reboot</div>
+                        <div class="command-line comment"># WARNING: Changing modes may reset configuration settings</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Address Reservation -->
+        <section id="address-reservation" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-fingerprint"></i> Pillar One: Persistent Identity via Address Reservation
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Mechanism of Address Reservation</h3>
+                <p class="step-description">A "VIP lane" is fundamentally predicated on the router's ability to recognize a specific device every time it connects to the network. Without Address Reservation, the router's DHCP server assigns dynamic IP addresses, meaning priority rules might target different devices over time.</p>
+                
+                <div class="simple-table">
+                    <table>
+                        <tr>
+                            <th>Field</th>
+                            <th>Requirement</th>
+                            <th>Reason</th>
+                        </tr>
+                        <tr>
+                            <td>MAC Address</td>
+                            <td>Unique per device</td>
+                            <td>Serves as the device's fingerprint on the network</td>
+                        </tr>
+                        <tr>
+                            <td>IP Address</td>
+                            <td>Fixed within subnet</td>
+                            <td>Allows router to target traffic rules to the device</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>Enabled</td>
+                            <td>Activates the rule in DHCP server's logic</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Implementation on Legacy Green UI (V1, V2)</h3>
+                <p class="step-description">For hardware versions 1 and 2, follow these steps:</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Legacy UI Address Reservation</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Configuration</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Navigation: DHCP → Address Reservation</div>
+                        <div class="command-line">Action: Click "Add New"</div>
+                        <div class="command-line">MAC Address: XX-XX-XX-XX-XX-XX (VIP device MAC)</div>
+                        <div class="command-line">Reserved IP: 192.168.0.10 (outside DHCP pool)</div>
+                        <div class="command-line">Status: Enabled</div>
+                        <div class="command-line">Save: Click Save → Reboot router if required</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Implementation on Modern Blue UI (V3, V4, V5)</h3>
+                <p class="step-description">For newer hardware versions:</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Modern UI Address Reservation</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Configuration</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Navigation: Advanced → Network → LAN Settings</div>
+                        <div class="command-line">Action: Find Address Reservation table → Click Add</div>
+                        <div class="command-line">MAC Address: XX:XX:XX:XX:XX:XX (colon format)</div>
+                        <div class="command-line">IP Address: 192.168.1.100 (example VIP IP)</div>
+                        <div class="command-line">Description: Executive_Laptop (device name)</div>
+                        <div class="command-line">Enable: Check "Enable This Entry" box</div>
+                        <div class="command-line">Save: Click OK/Save</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <div class="box-title"><i class="fas fa-shield-alt"></i> Advanced Security: IP & MAC Binding</div>
+                <p>For additional security, enable IP & MAC Binding (ARP Binding) under Advanced → Security. This creates static ARP entries preventing "ARP spoofing" where unauthorized devices impersonate VIP devices.</p>
+            </div>
+        </section>
+
+        <!-- Bandwidth Control -->
+        <section id="bandwidth-control" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-tachometer-alt"></i> Pillar Two: Bandwidth Control for Legacy Interfaces (V1, V2)
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Mathematical Prerequisites for Traffic Shaping</h3>
+                <p class="step-description">Bandwidth values on the TL-MR6400 are expressed in Kilobits per second (Kbps). Administrators must convert megabit speeds from their ISP to Kbps for accurate configuration.</p>
+                
+                <div id="conversion-formula" class="formula-box">
+                    <div class="box-title">Bandwidth Conversion Formula</div>
+                    <div class="formula">1 Mbps = 1024 Kbps</div>
+                    <p class="text-text-secondary">Example: 10 Mbps LTE = 10,240 Kbps</p>
+                </div>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Global Bandwidth Control Settings</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Configuration</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Navigation: Bandwidth Control → Control Settings</div>
+                        <div class="command-line">Enable: Check "Enable Bandwidth Control" box</div>
+                        <div class="command-line">Line Type: ADSL or Other (for LTE/3G)</div>
+                        <div class="command-line">Egress Bandwidth: [Upload speed in Kbps]</div>
+                        <div class="command-line">Ingress Bandwidth: [Download speed in Kbps]</div>
+                        <div class="command-line">Save: Click Save to apply global constraints</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Defining the VIP Rule</h3>
+                <p class="step-description">The true construction of the VIP lane occurs in the Rules List:</p>
+                
+                <div class="simple-table">
+                    <table>
+                        <tr>
+                            <th>Rule Component</th>
+                            <th>VIP Setting</th>
+                            <th>Non-VIP Setting</th>
+                        </tr>
+                        <tr>
+                            <td>Priority</td>
+                            <td>1 (Highest)</td>
+                            <td>5 (Default) or 8 (Lowest)</td>
+                        </tr>
+                        <tr>
+                            <td>Min Bandwidth</td>
+                            <td>Higher than 0</td>
+                            <td>0 (No guarantee)</td>
+                        </tr>
+                        <tr>
+                            <td>Max Bandwidth</td>
+                            <td>Up to ISP max</td>
+                            <td>Capped to prevent saturation</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">VIP Rule Configuration</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Configuration</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Navigation: Bandwidth Control → Rules List → Add New</div>
+                        <div class="command-line">IP Range: 192.168.0.10 (VIP reserved IP)</div>
+                        <div class="command-line">Port Range: 1-65535 (or specific like 5060 for VoIP)</div>
+                        <div class="command-line">Protocol: ALL, TCP, or UDP as required</div>
+                        <div class="command-line">Priority: 1 (Highest priority)</div>
+                        <div class="command-line">Egress Min: 512 Kbps (upload guarantee)</div>
+                        <div class="command-line">Egress Max: 10000 Kbps (upload ceiling)</div>
+                        <div class="command-line">Ingress Min: 2048 Kbps (download guarantee)</div>
+                        <div class="command-line">Ingress Max: 20000 Kbps (download ceiling)</div>
+                        <div class="command-line">Save: Click Save</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QoS Modern -->
+        <section id="qos-modern" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-sort-amount-up"></i> Pillar Three: Quality of Service (QoS) for Modern Interfaces (V3, V4, V5)
+            </h2>
+
+            <div id="nat-boost-conflict" class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">The NAT Boost Conflict</h3>
+                <p class="step-description">A critical technical constraint in modern TL-MR6400 firmwares is that QoS and NAT Boost cannot be enabled simultaneously. NAT Boost is a hardware acceleration technique that offloads NAT processing from the CPU.</p>
+                
+                <div class="technical-note">
+                    <div class="box-title"><i class="fas fa-exclamation-circle"></i> Technical Constraint</div>
+                    <p>Because QoS requires the CPU to inspect every packet to determine its priority, the acceleration must be disabled for the "VIP lane" to function.</p>
+                </div>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Disable NAT Boost for QoS</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Configuration</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Navigation: Advanced → Network → NAT Boost</div>
+                        <div class="command-line">Action: Uncheck "Enable NAT Boost"</div>
+                        <div class="command-line">Save: Click Save</div>
+                        <div class="command-line">Reboot: Confirm prompt to reboot or refresh</div>
+                        <div class="command-line comment"># WARNING: QoS will not work with NAT Boost enabled</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">QoS Global Setup</h3>
+                <p class="step-description">Configure the global QoS parameters for traffic prioritization:</p>
+                
+                <div class="simple-table">
+                    <table>
+                        <tr>
+                            <th>Priority Level</th>
+                            <th>Default Weight</th>
+                            <th>Recommended VIP Weight</th>
+                            <th>Purpose</th>
+                        </tr>
+                        <tr>
+                            <td>High</td>
+                            <td>60%</td>
+                            <td>60% - 80%</td>
+                            <td>Real-time services (VoIP, Video)</td>
+                        </tr>
+                        <tr>
+                            <td>Middle</td>
+                            <td>30%</td>
+                            <td>20%</td>
+                            <td>Standard browsing and office work</td>
+                        </tr>
+                        <tr>
+                            <td>Low</td>
+                            <td>10%</td>
+                            <td>5% - 10%</td>
+                            <td>Background updates, downloads</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">QoS Configuration Steps</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Configuration</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Navigation: Advanced → QoS → Settings</div>
+                        <div class="command-line">Enable: Check "Enable QoS" box</div>
+                        <div class="command-line">Total Upload: [ISP upload speed]</div>
+                        <div class="command-line">Total Download: [ISP download speed]</div>
+                        <div class="command-line">Advanced: Click to reveal priority sliders</div>
+                        <div class="command-line">High Priority: Set to 60% (recommended for VIP)</div>
+                        <div class="command-line">Middle Priority: Set to 30%</div>
+                        <div class="command-line">Low Priority: Set to 10%</div>
+                        <div class="command-line">Save: Click Save</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Assigning Devices to VIP Tier</h3>
+                <p class="step-description">Once tiers are defined, move reserved devices into the High Priority lane:</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Device Priority Assignment</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Configuration</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Selection: In High Priority column, click Add</div>
+                        <div class="command-line">Method 1: Select By Device → Click Scan</div>
+                        <div class="command-line">Action: Choose reserved VIP device from list</div>
+                        <div class="command-line">Method 2: Select By Application (e.g., "VoIP")</div>
+                        <div class="command-line comment"># Use Method 1 for device-specific VIP lanes</div>
+                        <div class="command-line comment"># Use Method 2 for service-type prioritization</div>
+                        <div class="command-line">Save: Click Save or OK</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Limitations -->
+        <section id="limitations" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-exclamation-triangle"></i> Operational Barriers: The 4G Mode Limitation
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">The Fundamental Constraint</h3>
+                <p class="step-description">A profound discovery in the technical analysis of the TL-MR6400 is that Bandwidth Control and QoS may be entirely absent or non-functional when the router is in 3G/4G Router Mode.</p>
+                
+                <div class="warning-box">
+                    <div class="box-title"><i class="fas fa-ban"></i> Critical Limitation</div>
+                    <p>Community feedback and support tickets confirm that for many firmware versions, these menus only appear when the device is set to Wireless Router Mode.</p>
+                </div>
+                
+                <div class="simple-table">
+                    <table>
+                        <tr>
+                            <th>Operation Mode</th>
+                            <th>QoS Availability</th>
+                            <th>Bandwidth Control</th>
+                            <th>VIP Lane Feasibility</th>
+                        </tr>
+                        <tr>
+                            <td>3G/4G Router Mode</td>
+                            <td>❌ Often disabled</td>
+                            <td>❌ Usually absent</td>
+                            <td>Limited or impossible</td>
+                        </tr>
+                        <tr>
+                            <td>Wireless Router Mode</td>
+                            <td>✅ Full functionality</td>
+                            <td>✅ Available (V1/V2)</td>
+                            <td>Full implementation possible</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Rationale for the Limitation</h3>
+                <p class="step-description">The exclusion of QoS from 4G mode is often attributed to the processing overhead. Managing a dynamic LTE link—which fluctuates based on signal noise and tower congestion—while simultaneously performing deep packet inspection for QoS is taxing for the MR6400's CPU.</p>
+                
+                <div class="tip-box">
+                    <div class="box-title"><i class="fas fa-microchip"></i> Processing Overhead Explanation</div>
+                    <p>TP-Link has historically disabled these features in 4G mode to maintain basic network stability. The CPU cannot handle both dynamic LTE management and deep packet inspection simultaneously.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Workaround: Beta Firmware and Manual Band Selection</h3>
+                <p class="step-description">For administrators requiring a VIP lane on 4G, there is an official "manual band selection" beta firmware provided for various hardware versions.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Beta Firmware Implementation</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Procedure</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Step 1: Download beta firmware for your hardware version</div>
+                        <div class="command-line">Step 2: Navigate to Advanced → System Tools → Firmware Upgrade</div>
+                        <div class="command-line">Step 3: Upload the .bin file and wait for reboot</div>
+                        <div class="command-line">Step 4: Navigate to Advanced → Network → Internet</div>
+                        <div class="command-line">Step 5: Change Band setting from Auto to Manual</div>
+                        <div class="command-line">Step 6: Scan for available bands</div>
+                        <div class="command-line">Step 7: Select band with strongest signal strength</div>
+                        <div class="command-line comment"># Signal strength indicated by lit bars on front panel</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3 class="step-title">Alternative Workaround: Parental Controls as Traffic Shaper</h3>
+                <p class="step-description">If QoS is completely unavailable in your 4G mode firmware, Parental Controls can be leveraged as a "negative" traffic shaper.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Parental Controls Configuration</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Configuration</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Navigation: Advanced → Parental Controls</div>
+                        <div class="command-line">Enable: Turn on Parental Controls feature</div>
+                        <div class="command-line">Add Devices: Add non-VIP devices to restriction list</div>
+                        <div class="command-line">Time Controls: Limit access during VIP priority periods</div>
+                        <div class="command-line">Content Filtering: Restrict bandwidth-heavy services</div>
+                        <div class="command-line comment"># This creates "negative" VIP lane by restricting others</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mobile Management -->
+        <section id="mobile-management" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-mobile-alt"></i> Mobile Management: The TP-Link Tether App Guide
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Device Prioritization via Tether</h3>
+                <p class="step-description">The Tether app offers a simplified, mobile-first management experience for the TL-MR6400 on Android and iOS. While it lacks granular Kbps settings, it allows for rapid "on-the-fly" adjustments.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Tether App Priority Configuration</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Steps</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Step 1: Launch Tether app and log in with TP-Link ID</div>
+                        <div class="command-line">Step 2: Tap the card for your MR6400 router</div>
+                        <div class="command-line">Step 3: If supported, tap on HomeCare or Tools → QoS</div>
+                        <div class="command-line">Step 4: Choose preset filter (Streaming, Work, etc.)</div>
+                        <div class="command-line">Alternative: View Connected Clients list</div>
+                        <div class="command-line">Action: Tap on device → Look for High Priority toggle</div>
+                        <div class="command-line">Block: Use Block button to manually clear lane for VIP</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Address Reservation via Tether</h3>
+                <p class="step-description">As of recent app versions, Address Reservation may not be directly available in the mobile interface for all MR6400 hardware revisions.</p>
+                
+                <div class="tip-box">
+                    <div class="box-title"><i class="fas fa-exclamation-circle"></i> Mobile Limitation Workaround</div>
+                    <p>If the Address Reservation menu is missing from the app, use your mobile device's web browser to access http://tplinkmodem.net and follow the web-based steps detailed in the Address Reservation section of this guide.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advanced Security -->
+        <section id="advanced-security" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-shield-alt"></i> Supplementary Security and Traffic Settings
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Guest Network Isolation</h3>
+                <p class="step-description">Deploying a Guest Network is an effective way to offload non-essential traffic to a separate SSID that can be capped or isolated from main network resources.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Guest Network Configuration</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Configuration</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Navigation: Advanced → Guest Network</div>
+                        <div class="command-line">Enable: Turn on 2.4 GHz Guest Network</div>
+                        <div class="command-line">SSID: Set unique guest network name</div>
+                        <div class="command-line">Password: Set secure guest password</div>
+                        <div class="command-line">Security: Disable these options:</div>
+                        <div class="command-line">  ❌ Allow Guests to See Each Other</div>
+                        <div class="command-line">  ❌ Allow Guests to Access My Local Network</div>
+                        <div class="command-line">Save: Apply settings</div>
+                        <div class="command-line comment"># This preserves VIP device security and bandwidth</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">SMS and Data Limit Notifications</h3>
+                <p class="step-description">Because the TL-MR6400 operates on a 4G plan, a "VIP lane" can inadvertently lead to rapid data consumption.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Data Limit Configuration</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Configuration</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Navigation: Advanced → Network → Data Settings</div>
+                        <div class="command-line">Enable: Turn on Data Limit feature</div>
+                        <div class="command-line">Monthly Allowance: Set data cap (e.g., 50GB)</div>
+                        <div class="command-line">Reset Day: Set monthly reset date</div>
+                        <div class="command-line">SMS Alerts: Monitor SMS menu for ISP notifications</div>
+                        <div class="command-line comment"># Prevents overage charges from VIP lane usage</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="led-indicators" class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Diagnostic Indicators for Throughput Verification</h3>
+                <p class="step-description">After configuring the VIP lane, monitor the router's front-panel LEDs to verify network state:</p>
+                
+                <div class="simple-table">
+                    <table>
+                        <tr>
+                            <th>LED Icon</th>
+                            <th>Desired State</th>
+                            <th>Meaning for VIP Lane</th>
+                        </tr>
+                        <tr>
+                            <td>Internet</td>
+                            <td>Solid Green/Blue</td>
+                            <td>Active connection. If off, VIP lane has no backhaul</td>
+                        </tr>
+                        <tr>
+                            <td>Wi-Fi</td>
+                            <td>Flashing</td>
+                            <td>Indicates active traffic transmission</td>
+                        </tr>
+                        <tr>
+                            <td>LAN</td>
+                            <td>On</td>
+                            <td>Verified wired connection for high-priority devices</td>
+                        </tr>
+                        <tr>
+                            <td>Signal Strength</td>
+                            <td>3-4 Bars</td>
+                            <td>Necessary for LTE modem to provide VIP traffic speeds</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Maintenance -->
+        <section id="maintenance" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-tools"></i> Technical Maintenance: Firmware and Recovery
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Manual Firmware Upgrade</h3>
+                <p class="step-description">A stable "VIP lane" is impossible on buggy or outdated firmware. The TL-MR6400 supports both manual and cloud-based updates.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Firmware Upgrade Procedure</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Procedure</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Step 1: Visit TP-Link support page for your hardware version</div>
+                        <div class="command-line">Step 2: Download latest firmware file</div>
+                        <div class="command-line">Step 3: Navigate to Advanced → System Tools → Firmware Upgrade</div>
+                        <div class="command-line">Step 4: Click Browse to select firmware file</div>
+                        <div class="command-line">Step 5: Click Upgrade button</div>
+                        <div class="command-line">Step 6: Wait for process to complete (do NOT power off)</div>
+                        <div class="command-line comment"># WARNING: Power interruption may cause permanent damage</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">The TFTP Recovery Protocol</h3>
+                <p class="step-description">For professional peers dealing with a "bricked" unit (e.g., after failed VIP lane configuration or firmware attempt), the TFTP recovery method is a powerful tool.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">TFTP Recovery Procedure</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy Procedure</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Preparation: Download official firmware</div>
+                        <div class="command-line">Rename: Change file name to tp_recovery.bin</div>
+                        <div class="command-line">Place: Put file in TFTP server directory on PC</div>
+                        <div class="command-line">PC Setup: Assign static IP 192.168.0.225, subnet 255.255.255.0</div>
+                        <div class="command-line">Execution: Power off router</div>
+                        <div class="command-line">Button: Press and hold WPS/RESET button</div>
+                        <div class="command-line">Power: Turn on router while holding button</div>
+                        <div class="command-line">Hold: Continue until file transfer begins (LED behavior)</div>
+                        <div class="command-line comment"># Monitor TFTP server logs for transfer status</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Strategic Synthesis: Creating the Optimal Environment</h3>
+                <p class="step-description">The construction of a VIP lane is not merely a single checkbox but an orchestration of settings. To achieve expert-level configuration:</p>
+                
+                <div class="success-box">
+                    <div class="box-title"><i class="fas fa-check-circle"></i> Expert Configuration Checklist</div>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="margin-bottom: 10px;"><i class="fas fa-signal" style="color: var(--accent-green); margin-right: 10px;"></i> <strong>Audit the Signal:</strong> Place router near window to maximize LTE reception</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-fingerprint" style="color: var(--accent-green); margin-right: 10px;"></i> <strong>Anchor Identities:</strong> Use Address Reservation for persistent device recognition</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-tachometer-alt" style="color: var(--accent-green); margin-right: 10px;"></i> <strong>Apply Shaping:</strong> Configure Bandwidth Control (Legacy) or QoS (Modern)</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-ban" style="color: var(--accent-green); margin-right: 10px;"></i> <strong>Disable NAT Boost:</strong> Required for QoS functionality in modern interfaces</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-users-slash" style="color: var(--accent-green); margin-right: 10px;"></i> <strong>Isolate Noise:</strong> Use Guest Networks to segregate non-essential traffic</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-chart-line" style="color: var(--accent-green); margin-right: 10px;"></i> <strong>Monitor Consistently:</strong> Use Tether app or System Log to adjust rules</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-box" style="margin-top: 20px;">
+                    <div class="box-title"><i class="fas fa-flag-checkered"></i> Final Technical Summary</div>
+                    <p>By methodically applying these granular steps, the TP-Link TL-MR6400 can be optimized to provide a robust, prioritized networking experience that defies the typical limitations of shared 4G LTE environments. This technical approach ensures that mission-critical data always finds its path, regardless of the competing demands on the local network.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-12 pt-8 border-t border-border-color text-center text-text-tertiary text-sm">
+            <div class="address-card" style="background: transparent; border: none; text-align: center;">
+                <div class="address-title">Amir Shemsu - Jr. IT Specialist</div>
+                <div class="address-line"><i class="fas fa-phone"></i> 0913082128 | <i class="fas fa-envelope"></i> amishashems@gmail.com</div>
+                <div class="address-line">
+                    <a href="https://linkedin.com/in/amishashems" class="text-accent-blue hover:underline">LinkedIn</a> | 
+                    <a href="https://github.com/AmirShemsu" class="text-accent-blue hover:underline">GitHub</a>
+                </div>
+                <div class="address-line" style="font-size: 11px; color: var(--text-tertiary); margin-top: 8px;">
+                    Strategic Optimization of Traffic Prioritization on TP-Link TL-MR6400 - Technical Report
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            mobileMenuBtn.innerHTML = sidebar.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+
+        // Theme toggle functionality
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        
+        // Check for saved theme or default to dark
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', currentTheme);
+        updateThemeButton(currentTheme);
+        
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeButton(newTheme);
+        });
+        
+        function updateThemeButton(theme) {
+            if (theme === 'dark') {
+                themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i><span>Switch to Light Mode</span>';
+            } else {
+                themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i><span>Switch to Dark Mode</span>';
+            }
+        }
+
+        // Search functionality
+        function searchGuide() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const sections = document.querySelectorAll('.section-card');
+            const noResults = document.getElementById('noResults');
+            let visibleSections = 0;
+
+            sections.forEach(section => {
+                const txtValue = section.textContent || section.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    section.style.display = "";
+                    visibleSections++;
+                } else {
+                    section.style.display = "none";
+                }
+            });
+
+            noResults.style.display = visibleSections === 0 ? "" : "none";
+        }
+
+        // Toggle contact info
+        function toggleContactInfo() {
+            const contactList = document.getElementById('contact-list');
+            const toggleButton = document.getElementById('contact-toggle-btn');
+            
+            if (contactList.style.display === 'none') {
+                contactList.style.display = 'block';
+                toggleButton.innerHTML = '<i class="fas fa-times"></i> Hide Contact Info';
+            } else {
+                contactList.style.display = 'none';
+                toggleButton.innerHTML = '<i class="fas fa-address-card"></i> Show Contact Info';
+            }
+        }
+
+        // Copy code function
+        function copyCode(button) {
+            const codeContent = button.parentElement.nextElementSibling;
+            const textToCopy = codeContent.innerText;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Copy text function
+        function copyText(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Update progress when scrolling
+        function updateProgress() {
+            const sections = document.querySelectorAll('.section-card');
+            const scrollPosition = window.scrollY + 100;
+            
+            let currentSection = 0;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.offsetTop;
+                if (scrollPosition >= sectionTop) {
+                    currentSection = index + 1;
+                }
+            });
+            
+            const progressPercentage = (currentSection / 10) * 100;
+            
+            document.getElementById('sidebarProgress').style.width = `${progressPercentage}%`;
+            document.getElementById('mainProgress').style.width = `${progressPercentage}%`;
+            document.getElementById('progressText').textContent = `Section ${currentSection} of 10`;
+        }
+
+        // Update progress on scroll
+        window.addEventListener('scroll', updateProgress);
+        updateProgress(); // Initial call
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // Close mobile menu if open
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                    
+                    // Scroll to element
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

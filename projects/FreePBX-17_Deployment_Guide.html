@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreePBX 17 Complete Guide | Amir Shemsu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap');
+        
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1c1c1e;
+            --bg-tertiary: #2c2c2e;
+            --text-primary: #ffffff;
+            --text-secondary: #98989d;
+            --text-tertiary: #6c6c70;
+            --accent-blue: #007aff;
+            --accent-green: #34c759;
+            --accent-orange: #ff9500;
+            --accent-red: #ff3b30;
+            --border-color: #3a3a3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .linux-code {
+            font-family: 'Source Code Pro', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .profile-section {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .profile-title {
+            font-size: 12px;
+            color: var(--accent-blue);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .contact-info {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            line-height: 1.8;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 100%;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 101;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 44px;
+            height: 44px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            font-size: 20px;
+        }
+
+        /* Step-by-Step Guide */
+        .step-container {
+            counter-reset: step-counter;
+            margin: 30px 0;
+        }
+
+        .step {
+            position: relative;
+            padding: 25px;
+            margin-bottom: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .step-number {
+            position: absolute;
+            left: -15px;
+            top: 20px;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Command Box */
+        .command-box {
+            background: #1a1a1a;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .command-header {
+            background: #2a2a2a;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .command-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .copy-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: 'SF Pro Display', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #0056cc;
+        }
+
+        .copy-btn.copied {
+            background: var(--accent-green);
+        }
+
+        .command-content {
+            padding: 20px;
+            font-family: 'Source Code Pro', monospace;
+            color: #e0e0e0;
+            font-size: 14px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .command-line {
+            margin-bottom: 8px;
+        }
+
+        .command-comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .command-prompt {
+            color: #569cd6;
+            margin-right: 10px;
+        }
+
+        /* Tables */
+        .simple-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .simple-table th {
+            background: var(--bg-secondary);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .simple-table td {
+            padding: 12px 15px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .simple-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Tips & Notes */
+        .tip-box {
+            background: rgba(0, 122, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .warning-box {
+            background: rgba(255, 149, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-orange);
+        }
+
+        .success-box {
+            background: rgba(52, 199, 89, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .box-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        /* Progress Indicator */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <div class="profile-name">Amir Shemsu</div>
+            <div class="profile-title">Jr. IT Specialist</div>
+            <div class="contact-info">
+                <button id="contact-toggle-btn" onclick="toggleContactInfo()" class="copy-btn" style="margin-top: 10px;">Show Contact</button>
+                <div id="contact-list" style="display: none; margin-top: 15px;">
+                    <ul style="list-style: none; padding: 0; text-align: left; display: inline-block;">
+                        <li style="margin-bottom: 8px;"><i class="fas fa-phone" style="width: 20px; text-align: center;"></i> <a href="tel:0913082128" style="color: var(--accent-blue); text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">0913082128</a></li>
+                        <li style="margin-bottom: 8px;"><i class="fas fa-envelope" style="width: 20px; text-align: center;"></i> <a href="mailto:amishashems@gmail.com" style="color: var(--accent-blue); text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">amishashems@gmail.com</a></li>
+                        <li style="margin-bottom: 8px;"><i class="fab fa-linkedin" style="width: 20px; text-align: center;"></i> <a href="https://linkedin.com/in/amishashems" target="_blank" style="color: var(--accent-blue); text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">linkedin.com/in/amishashems</a></li>
+                        <li style="margin-bottom: 8px;"><i class="fab fa-github" style="width: 20px; text-align: center;"></i> <a href="https://github.com/AmirShemsu" target="_blank" style="color: var(--accent-blue); text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">github.com/AmirShemsu</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Input -->
+        <div class="search-container" style="padding: 0 20px 20px;">
+            <div style="position: relative;">
+                <i class="fas fa-search" style="position: absolute; top: 13px; left: 15px; color: var(--text-tertiary);"></i>
+                <input type="text" id="searchInput" placeholder="Search guide..." onkeyup="searchGuide()" style="width: 100%; padding: 12px 12px 12px 40px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 14px;">
+            </div>
+        </div>
+
+        <!-- Installation Steps Sidebar -->
+        <div class="sidebar-steps">
+            <h3 class="text-lg font-semibold mb-4">Installation Steps</h3>
+            
+            <div class="step-nav">
+                <a href="#step1" class="step-nav-item">
+                    <div class="step-nav-number">1</div>
+                    <div class="step-nav-text">Prepare System</div>
+                </a>
+                
+                <a href="#step2" class="step-nav-item">
+                    <div class="step-nav-number">2</div>
+                    <div class="step-nav-text">Install Debian 12</div>
+                </a>
+                
+                <a href="#step3" class="step-nav-item">
+                    <div class="step-nav-number">3</div>
+                    <div class="step-nav-text">Install FreePBX</div>
+                </a>
+                
+                <a href="#step4" class="step-nav-item">
+                    <div class="step-nav-number">4</div>
+                    <div class="step-nav-text">Network Setup</div>
+                </a>
+                
+                <a href="#step5" class="step-nav-item">
+                    <div class="step-nav-number">5</div>
+                    <div class="step-nav-text">Security Setup</div>
+                </a>
+                
+                <a href="#step6" class="step-nav-item">
+                    <div class="step-nav-number">6</div>
+                    <div class="step-nav-text">Phone Setup</div>
+                </a>
+                
+                <a href="#step7" class="step-nav-item">
+                    <div class="step-nav-number">7</div>
+                    <div class="step-nav-text">Test System</div>
+                </a>
+
+                <a href="#step8" class="step-nav-item">
+                    <div class="step-nav-number">8</div>
+                    <div class="step-nav-text">Troubleshooting page</div>
+                </a>
+                <a href="#common-commands" class="step-nav-item">
+                    <div class="step-nav-number">9</div>
+                    <div class="step-nav-text">FreePBX Commands</div>
+                </a>
+            </div>
+
+            <style>
+                .step-nav-item {
+                    display: flex;
+                    align-items: center;
+                    padding: 12px;
+                    margin: 5px 0;
+                    background: var(--bg-tertiary);
+                    border-radius: 8px;
+                    text-decoration: none;
+                    color: var(--text-secondary);
+                    transition: all 0.2s;
+                }
+
+                .step-nav-item:hover {
+                    background: var(--accent-blue);
+                    color: white;
+                }
+
+                .step-nav-number {
+                    width: 24px;
+                    height: 24px;
+                    background: var(--border-color);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 12px;
+                    font-weight: 600;
+                    margin-right: 10px;
+                }
+
+                .step-nav-item:hover .step-nav-number {
+                    background: white;
+                    color: var(--accent-blue);
+                }
+
+                .step-nav-text {
+                    font-size: 14px;
+                }
+            </style>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="mt-8">
+            <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+            <div class="space-y-2">
+                <a href="#common-commands" class="block p-3 bg-bg-tertiary rounded-lg text-sm hover:bg-accent-blue hover:text-white transition">Common Commands</a>
+                <a href="#step8" class="block p-3 bg-bg-tertiary rounded-lg text-sm hover:bg-accent-blue hover:text-white transition">Troubleshooting</a>
+                <a href="#securityStep" class="block p-3 bg-bg-tertiary rounded-lg text-sm hover:bg-accent-blue hover:text-white transition">Security Tips</a>
+                <a href="#backup" class="block p-3 bg-bg-tertiary rounded-lg text-sm hover:bg-accent-blue hover:text-white transition">Backup Guide</a>
+            </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="mt-8 pt-6 border-t border-border-color">
+            <div class="text-sm mb-2">Installation Progress</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="sidebarProgress" style="width: 14%"></div>
+            </div>
+            <div class="text-xs text-text-tertiary mt-2" id="progressText">Step 1 of 7</div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="mb-10">
+            <h1 class="text-4xl font-bold mb-4">FreePBX 17 Complete Installation Guide</h1>
+            <p class="text-lg text-text-secondary">Step-by-step guide for beginners and experts. Simple instructions with copy-paste commands.</p>
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="section-card text-center" style="display: none;">
+            <h2 class="text-2xl font-semibold mb-4">No Results Found</h2>
+            <p class="text-text-secondary">Your search did not match any sections. Please try a different term.</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container mb-8">
+            <div class="progress-bar" id="mainProgress" style="width: 14%"></div>
+        </div>
+
+        <!-- Step 1: Prepare System -->
+        <section id="step1" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-tools"></i> Step 1: Prepare Your System
+            </h2>
+            
+            <p class="text-text-secondary mb-6">Before installing, make sure your computer or server meets the requirements.</p>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Check System Requirements</h3>
+                <p class="step-description">FreePBX needs minimum 2GB RAM and 20GB disk space. For better performance, use 4GB RAM or more.</p>
+                
+                <div class="simple-table">
+                    <table>
+                        <tr>
+                            <th>Component</th>
+                            <th>Minimum</th>
+                            <th>Recommended</th>
+                        </tr>
+                        <tr>
+                            <td>RAM</td>
+                            <td>2 GB</td>
+                            <td>4 GB or more</td>
+                        </tr>
+                        <tr>
+                            <td>Storage</td>
+                            <td>20 GB</td>
+                            <td>50 GB SSD</td>
+                        </tr>
+                        <tr>
+                            <td>CPU</td>
+                            <td>2 cores</td>
+                            <td>4 cores</td>
+                        </tr>
+                        <tr>
+                            <td>Network</td>
+                            <td>100 Mbps</td>
+                            <td>1 Gbps</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Download Debian 12</h3>
+                <p class="step-description">Get the Debian 12 ISO file from the official website. We'll use the smaller "netinst" version.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Download Links</div>
+                        <button class="copy-btn" onclick="copyText(this, 'https://www.debian.org/download')">Copy Link</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Official Website: https://www.debian.org/download</div>
+                        <div class="command-line">Netinst ISO: debian-12.x.x-amd64-netinst.iso</div>
+                        <div class="command-line comment"># Choose the netinst version (smaller download)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <div class="box-title"><i class="fas fa-lightbulb"></i> Tip for Beginners</div>
+                <p>If you're new to Linux, you can install FreePBX on a virtual machine first. Use VMware or VirtualBox to practice.</p>
+            </div>
+        </section>
+
+        <!-- Step 2: Install Debian 12 -->
+        <section id="step2" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-download"></i> Step 2: Install Debian 12
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Boot from USB/DVD</h3>
+                <p class="step-description">Create bootable USB with the Debian ISO. Restart computer and boot from USB.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Installation Settings</h3>
+                <p class="step-description">Follow these settings during Debian installation:</p>
+                
+                <div class="simple-table">
+                    <table>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Choose This</th>
+                            <th>Why</th>
+                        </tr>
+                        <tr>
+                            <td>Language</td>
+                            <td>English</td>
+                            <td>Easier troubleshooting</td>
+                        </tr>
+                        <tr>
+                            <td>Location</td>
+                            <td>Your country</td>
+                            <td>For time settings</td>
+                        </tr>
+                        <tr>
+                            <td>Keyboard</td>
+                            <td>US English</td>
+                            <td>Standard layout</td>
+                        </tr>
+                        <tr>
+                            <td>Hostname</td>
+                            <td>pbx</td>
+                            <td>Easy to remember</td>
+                        </tr>
+                        <tr>
+                            <td>Domain</td>
+                            <td>local</td>
+                            <td>For local network</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Partition Disk</h3>
+                <p class="step-description">Choose "Guided - use entire disk" for simple setup. This is good for beginners.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Partition Recommendation</div>
+                        <button class="copy-btn" onclick="copyText(this, 'Choose: Guided - use entire disk')">Copy</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line comment"># During installation, select:</div>
+                        <div class="command-line">1. Guided - use entire disk</div>
+                        <div class="command-line">2. All files in one partition</div>
+                        <div class="command-line">3. Finish partitioning and write changes</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3 class="step-title">Software Selection</h3>
+                <p class="step-description">Only select these two options. Do NOT select any other software.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Required Software</div>
+                        <button class="copy-btn" onclick="copyText(this, 'Select: SSH server and Standard system utilities')">Copy</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">✅ SSH server</div>
+                        <div class="command-line">✅ Standard system utilities</div>
+                        <div class="command-line comment"># IMPORTANT: Do NOT select:</div>
+                        <div class="command-line">❌ Debian desktop environment</div>
+                        <div class="command-line">❌ Web server</div>
+                        <div class="command-line">❌ Print server</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <h3 class="step-title">Set Root Password</h3>
+                <p class="step-description">Create a strong password for the root user. Write it down in a safe place.</p>
+                
+                <div class="warning-box">
+                    <div class="box-title"><i class="fas fa-exclamation-triangle"></i> Important</div>
+                    <p>Remember your root password! You will need it later. Make it strong: use letters, numbers, and symbols.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 3: Install FreePBX -->
+        <section id="step3" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-server"></i> Step 3: Install FreePBX 17
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Login to Your Server</h3>
+                <p class="step-description">After Debian installation completes, login with root and the password you created.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Login Command</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line">Username: root</div>
+                        <div class="command-line">Password: [your root password]</div>
+                        <div class="command-line comment"># You will see: root@pbx:~#</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="securityStep" class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Update System (Security)</h3>
+                <p class="step-description">First, update your system to get the latest security updates.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Update Commands</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line"><span class="command-prompt">#</span> apt update</div>
+                        <div class="command-line"><span class="command-prompt">#</span> apt upgrade -y</div>
+                        <div class="command-line comment"># Wait for updates to finish</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Install FreePBX</h3>
+                <p class="step-description">Use the official FreePBX installation script. This is the easiest method.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">FreePBX Installation</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Download the installation script</div>
+                        <div class="command-line"><span class="command-prompt">#</span> wget https://github.com/sangoma/freepbx/raw/master/sng_freepbx_debian_install.sh</div>
+                        <div class="command-line"><span class="command-prompt">#</span> chmod +x sng_freepbx_debian_install.sh</div>
+                        <div class="command-line"><span class="command-prompt">#</span> ./sng_freepbx_debian_install.sh --force</div>
+                        <div class="command-line comment"># Wait 15-30 minutes for installation to complete</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3 class="step-title">Wait for Installation</h3>
+                <p class="step-description">The installation will take 15-30 minutes. Do not turn off your computer.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Check Installation Progress</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># To see what's happening:</div>
+                        <div class="command-line"><span class="command-prompt">#</span> tail -f /var/log/pbx/freepbx17-install.log</div>
+                        <div class="command-line comment"># Press Ctrl+C to stop watching</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <h3 class="step-title">Reboot System</h3>
+                <p class="step-description">After installation completes, restart your server.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Reboot Command</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line"><span class="command-prompt">#</span> reboot</div>
+                        <div class="command-line comment"># Wait 2 minutes for server to restart</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <div class="box-title"><i class="fas fa-check-circle"></i> Success!</div>
+                <p>FreePBX is now installed. After reboot, you can access the web interface at http://[your-server-ip]</p>
+            </div>
+        </section>
+
+        <!-- Step 4: Network Setup -->
+        <section id="step4" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-network-wired"></i> Step 4: Network Configuration
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Find Your IP Address</h3>
+                <p class="step-description">You need to know your server's IP address to access the web interface.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Find IP Address</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line"><span class="command-prompt">#</span> ip addr show</div>
+                        <div class="command-line comment"># Look for "inet" followed by numbers like 192.168.1.10</div>
+                        <div class="command-line comment"># Common home networks: 192.168.1.x or 192.168.0.x</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Access Web Interface</h3>
+                <p class="step-description">Open a web browser on another computer on the same network.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Web Browser URL</div>
+                        <button class="copy-btn" onclick="copyText(this, 'http://192.168.1.10')">Copy Example</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">Type in browser: http://[your-server-ip]</div>
+                        <div class="command-line comment"># Example: http://192.168.1.10</div>
+                        <div class="command-line comment"># If using https: https://192.168.1.10</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">First-Time Setup</h3>
+                <p class="step-description">Complete the FreePBX setup wizard in your browser.</p>
+                
+                <div class="simple-table">
+                    <table>
+                        <tr>
+                            <th>Step</th>
+                            <th>What to Enter</th>
+                        </tr>
+                        <tr>
+                            <td>Admin Username</td>
+                            <td>admin (or choose your own)</td>
+                        </tr>
+                        <tr>
+                            <td>Admin Password</td>
+                            <td>Create a strong password</td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>Your email address</td>
+                        </tr>
+                        <tr>
+                            <td>System Ident</td>
+                            <td>My PBX System</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title"><i class="fas fa-exclamation-triangle"></i> Important Note</div>
+                <p>If you cannot access the web interface, check your firewall. On the server, run: <code class="linux-code">ufw disable</code> to temporarily disable firewall for testing.</p>
+            </div>
+        </section>
+
+        <!-- Step 5: Security Setup -->
+        <section id="step5" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-shield-alt"></i> Step 5: Security Configuration
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Change Default Passwords</h3>
+                <p class="step-description">Change all default passwords to secure your system.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Password Change Commands</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Change root password</div>
+                        <div class="command-line"><span class="command-prompt">#</span> passwd</div>
+                        <div class="command-line comment"># Change FreePBX admin password (in web interface)</div>
+                        <div class="command-line comment"># Admin → Administrator → Click user → Change password</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Enable Firewall</h3>
+                <p class="step-description">Enable the FreePBX firewall to protect your system.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Firewall Setup</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># In FreePBX web interface:</div>
+                        <div class="command-line">1. Go to Admin → Module Admin</div>
+                        <div class="command-line">2. Search for "firewall"</div>
+                        <div class="command-line">3. Click "Install" on Firewall module</div>
+                        <div class="command-line">4. Go to Connectivity → Firewall</div>
+                        <div class="command-line">5. Click "Enable Firewall"</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Setup Fail2Ban</h3>
+                <p class="step-description">Install Fail2Ban to block hackers trying to guess passwords.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Fail2Ban Installation</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line"><span class="command-prompt">#</span> apt install fail2ban -y</div>
+                        <div class="command-line"><span class="command-prompt">#</span> systemctl enable fail2ban</div>
+                        <div class="command-line"><span class="command-prompt">#</span> systemctl start fail2ban</div>
+                        <div class="command-line comment"># Check status:</div>
+                        <div class="command-line"><span class="command-prompt">#</span> systemctl status fail2ban</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <div class="box-title"><i class="fas fa-lightbulb"></i> Security Tip</div>
+                <p>Always use strong passwords. Minimum 12 characters with letters, numbers, and symbols. Change passwords every 3 months.</p>
+            </div>
+        </section>
+
+        <!-- Step 6: Phone Setup -->
+        <section id="step6" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-phone"></i> Step 6: Add Phones
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Create Extension</h3>
+                <p class="step-description">Create a phone extension (like a phone number) for your phone.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Create Extension in Web Interface</div>
+                        <button class="copy-btn" onclick="copyText(this, 'Applications → Extensions → Add Extension')">Copy Steps</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">1. Go to Applications → Extensions</div>
+                        <div class="command-line">2. Click "Add Extension"</div>
+                        <div class="command-line">3. Choose "Generic SIP Device"</div>
+                        <div class="command-line">4. User Extension: 1001 (or any number)</div>
+                        <div class="command-line">5. Display Name: Your Name</div>
+                        <div class="command-line">6. Secret: Create a password for this phone</div>
+                        <div class="command-line">7. Click "Submit" then "Apply Config"</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Configure Phone</h3>
+                <p class="step-description">Configure your physical phone or softphone (like MicroSIP).</p>
+                
+                <div class="simple-table">
+                    <table>
+                        <tr>
+                            <th>Setting</th>
+                            <th>What to Enter</th>
+                        </tr>
+                        <tr>
+                            <td>SIP Server</td>
+                            <td>[your-server-ip]</td>
+                        </tr>
+                        <tr>
+                            <td>Port</td>
+                            <td>5060</td>
+                        </tr>
+                        <tr>
+                            <td>Username</td>
+                            <td>1001 (your extension)</td>
+                        </tr>
+                        <tr>
+                            <td>Password</td>
+                            <td>[the secret you created]</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Test Phone Registration</h3>
+                <p class="step-description">Check if your phone is connected to the PBX.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Check Registration Status</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># On the server, check if phone is registered:</div>
+                        <div class="command-line"><span class="command-prompt">#</span> asterisk -rx "sip show peers"</div>
+                        <div class="command-line comment"># Look for your extension (1001) with status "OK"</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <div class="box-title"><i class="fas fa-check-circle"></i> Phone Setup Complete</div>
+                <p>Your phone should now be registered. Try calling another extension or test with echo test (dial 9191).</p>
+            </div>
+        </section>
+
+        <!-- Step 7: Test System -->
+        <section id="step7" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-check-circle"></i> Step 7: Test Your System
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Test Internal Calls</h3>
+                <p class="step-description">Make calls between extensions to test if calling works.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Test Commands</div>
+                        <button class="copy-btn" onclick="copyText(this, 'Dial 9191 for echo test, 600 for music on hold')">Copy</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">1. Create two extensions (1001 and 1002)</div>
+                        <div class="command-line">2. From 1001, dial 1002</div>
+                        <div class="command-line">3. Answer from 1002</div>
+                        <div class="command-line">4. Test echo: dial 9191</div>
+                        <div class="command-line">5. Test music: dial 600</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Backup Your System</h3>
+                <p class="step-description">Create a backup so you can restore if something goes wrong.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Create Backup</div>
+                        <button class="copy-btn" onclick="copyText(this, 'Admin → Backup & Restore → New Backup → Full Backup')">Copy Steps</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line">1. Go to Admin → Backup & Restore</div>
+                        <div class="command-line">2. Click "New Backup"</div>
+                        <div class="command-line">3. Name: First-Backup</div>
+                        <div class="command-line">4. Type: Full Backup</div>
+                        <div class="command-line">5. Click "Backup"</div>
+                        <div class="command-line">6. Download the backup file to your computer</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Common Commands Reference</h3>
+                <p class="step-description">Here are useful commands for managing your FreePBX system.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Useful Linux Commands</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Restart FreePBX services</div>
+                        <div class="command-line"><span class="command-prompt">#</span> fwconsole restart</div>
+                        <div class="command-line comment"># Check system status</div>
+                        <div class="command-line"><span class="command-prompt">#</span> systemctl status asterisk</div>
+                        <div class="command-line comment"># View system logs</div>
+                        <div class="command-line"><span class="command-prompt">#</span> tail -f /var/log/asterisk/full</div>
+                        <div class="command-line comment"># Check disk space</div>
+                        <div class="command-line"><span class="command-prompt">#</span> df -h</div>
+                        <div class="command-line comment"># Check memory usage</div>
+                        <div class="command-line"><span class="command-prompt">#</span> free -h</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <div class="box-title"><i class="fas fa-flag-checkered"></i> Congratulations!</div>
+                <p>Your FreePBX system is now complete and ready to use. You have a working phone system with security and backup.</p>
+            </div>
+        </section>
+
+        <!-- Step 8: Troubleshooting -->
+        <section id="step8" class="section-card">
+            <h2 class="card-title">
+                <i class="fas fa-check-circle"></i> Step 8: Troubleshooting (FAQ)
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Initial System Diagnosis</h3>
+                <p class="step-description">First steps to identify what's wrong with your FreePBX system.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Check Basic System Info</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Hostname and OS version</div>
+                        <div class="command-line"><span class="command-prompt">#</span> hostname</div>
+                        <div class="command-line"><span class="command-prompt">#</span> hostname -f</div>
+                        <div class="command-line"><span class="command-prompt">#</span> cat /etc/redhat-release</div>
+                        <div class="command-line comment"># Network interfaces</div>
+                        <div class="command-line"><span class="command-prompt">#</span> ip addr show</div>
+                        <div class="command-line"><span class="command-prompt">#</span> ip link show</div>
+                        <div class="command-line comment"># Disk space</div>
+                        <div class="command-line"><span class="command-prompt">#</span> df -h</div>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Verify Network Connectivity</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Internal network</div>
+                        <div class="command-line"><span class="command-prompt">#</span> ping -c 3 192.168.1.1</div>
+                        <div class="command-line comment"># External network</div>
+                        <div class="command-line"><span class="command-prompt">#</span> ping -c 3 8.8.8.8</div>
+                        <div class="command-line comment"># DNS resolution</div>
+                        <div class="command-line"><span class="command-prompt">#</span> nslookup google.com</div>
+                        <div class="command-line"><span class="command-prompt">#</span> nslookup mirror.sangoma.net</div>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Check FreePBX Status</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># FreePBX services status</div>
+                        <div class="command-line"><span class="command-prompt">#</span> systemctl status asterisk</div>
+                        <div class="command-line"><span class="command-prompt">#</span> systemctl status httpd</div>
+                        <div class="command-line"><span class="command-prompt">#</span> systemctl status mariadb</div>
+                        <div class="command-line comment"># FreePBX version</div>
+                        <div class="command-line"><span class="command-prompt">#</span> fwconsole ma list framework</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Network Configuration Issues</h3>
+                <p class="step-description">Fix network connectivity problems, especially VMWare and router issues.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Router Blocks Access (MAC Filtering)</div>
+                        <button class="copy-btn" onclick="copyText(this, 'Get MAC: ip link show eth0 | grep ether\nIf MAC starts with 00:0c:29 (VMWare), whitelist it or use bridged mode')">Copy Tips</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line"><strong>Symptoms:</strong> Can ping router but no internet, VMWare VM</div>
+                        <div class="command-line"><strong>Solution 1:</strong> Get MAC address:</div>
+                        <div class="command-line code-inline">ip link show eth0 | grep ether</div>
+                        <div class="command-line"><strong>Solution 2:</strong> If MAC starts with 00:0c:29 (VMWare):</div>
+                        <div class="command-line">- Network admin needs to whitelist this MAC</div>
+                        <div class="command-line">- Or change to bridged network mode in VMWare</div>
+                        <div class="command-line">- Or use physical-like MAC address</div>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Fix DNS Resolution Issues</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Check current DNS</div>
+                        <div class="command-line"><span class="command-prompt">#</span> cat /etc/resolv.conf</div>
+                        <div class="command-line comment"># Set reliable DNS</div>
+                        <div class="command-line"><span class="command-prompt">#</span> echo "nameserver 8.8.8.8" > /etc/resolv.conf</div>
+                        <div class="command-line"><span class="command-prompt">#</span> echo "nameserver 1.1.1.1" >> /etc/resolv.conf</div>
+                        <div class="command-line comment"># Make permanent in network config:</div>
+                        <div class="command-line comment"># Add: DNS1=8.8.8.8, DNS2=1.1.1.1</div>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Fix Missing Default Gateway</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Check current routes</div>
+                        <div class="command-line"><span class="command-prompt">#</span> route -n</div>
+                        <div class="command-line"><span class="command-prompt">#</span> ip route show</div>
+                        <div class="command-line comment"># Add default gateway (replace 192.168.1.1)</div>
+                        <div class="command-line"><span class="command-prompt">#</span> route add default gw 192.168.1.1</div>
+                        <div class="command-line comment"># Make permanent in network config:</div>
+                        <div class="command-line comment"># Add: GATEWAY=192.168.1.1</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Package Management & Repositories</h3>
+                <p class="step-description">Fix CentOS 7 EOL repository issues and manage packages.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Fix CentOS 7 EOL Repository Errors</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Disable broken CentOS repos</div>
+                        <div class="command-line"><span class="command-prompt">#</span> yum-config-manager --disable base updates extras centos-\*</div>
+                        <div class="command-line comment"># Enable Sangoma repos only</div>
+                        <div class="command-line"><span class="command-prompt">#</span> yum-config-manager --enable sng-\*</div>
+                        <div class="command-line comment"># Clear YUM cache</div>
+                        <div class="command-line"><span class="command-prompt">#</span> yum clean all</div>
+                        <div class="command-line"><span class="command-prompt">#</span> rm -rf /var/cache/yum</div>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">When YUM Fails (No Internet)</div>
+                        <button class="copy-btn" onclick="copyText(this, 'Option A: Download RPM on another machine, transfer via SCP/HTTP/USB\nOption B: Use vault.centos.org for specific packages')">Copy Solutions</button>
+                    </div>
+                    <div class="command-content">
+                        <div class="command-line"><strong>Option A: Direct RPM Download</strong></div>
+                        <div class="command-line">1. Download on another machine with internet</div>
+                        <div class="command-line">2. Transfer via: SCP, HTTP server, or USB</div>
+                        <div class="command-line">3. Install manually: <span class="code-inline">rpm -ivh /tmp/package.rpm</span></div>
+                        <div class="command-line"><strong>Option B: Use Vault Archives</strong></div>
+                        <div class="command-line">Download from: <span class="code-inline">http://vault.centos.org/7.9.2009/os/x86_64/Packages/</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3 class="step-title">System Updates Procedure</h3>
+                <p class="step-description">Safely update your FreePBX system without breaking things.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Pre-Update Checklist</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Backup everything</div>
+                        <div class="command-line"><span class="command-prompt">#</span> fwconsole backup --backup</div>
+                        <div class="command-line comment"># Check available updates</div>
+                        <div class="command-line"><span class="command-prompt">#</span> fwconsole ma listupgrades</div>
+                        <div class="command-line"><span class="command-prompt">#</span> yum check-update</div>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Safe Update Sequence</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Update FreePBX framework first</div>
+                        <div class="command-line"><span class="command-prompt">#</span> fwconsole ma upgrade framework</div>
+                        <div class="command-line comment"># Update core modules</div>
+                        <div class="command-line"><span class="command-prompt">#</span> fwconsole ma upgrade core</div>
+                        <div class="command-line"><span class="command-prompt">#</span> fwconsole ma upgrade dashboard</div>
+                        <div class="command-line comment"># Update telephony modules</div>
+                        <div class="command-line"><span class="command-prompt">#</span> fwconsole ma upgrade sip</div>
+                        <div class="command-line"><span class="command-prompt">#</span> fwconsole ma upgrade pjsip</div>
+                        <div class="command-line comment"># Apply and restart</div>
+                        <div class="command-line"><span class="command-prompt">#</span> fwconsole reload</div>
+                        <div class="command-line"><span class="command-prompt">#</span> systemctl restart asterisk</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <h3 class="step-title">Installing Additional Software</h3>
+                <p class="step-description">Install tools like VS Code/code-server on your FreePBX system.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Install VS Code/code-server</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Direct binary installation (no dependencies needed)</div>
+                        <div class="command-line"><span class="command-prompt">#</span> cd /opt</div>
+                        <div class="command-line"><span class="command-prompt">#</span> wget https://github.com/coder/code-server/releases/download/v4.16.1/code-server-4.16.1-linux-amd64.tar.gz</div>
+                        <div class="command-line"><span class="command-prompt">#</span> tar -xzf code-server-*.tar.gz</div>
+                        <div class="command-line"><span class="command-prompt">#</span> ln -s /opt/code-server-*/bin/code-server /usr/local/bin/</div>
+                        <div class="command-line comment"># Run code-server</div>
+                        <div class="command-line"><span class="command-prompt">#</span> code-server --auth password --port 8080 --bind-addr 0.0.0.0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">6</div>
+                <h3 class="step-title">Diagnostic Commands</h3>
+                <p class="step-description">Quick commands to diagnose and monitor your system.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Quick Network Diagnostic</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line"><span class="command-prompt">#</span> echo "=== Network Status ==="</div>
+                        <div class="command-line"><span class="command-prompt">#</span> echo "IP: $(hostname -I)"</div>
+                        <div class="command-line"><span class="command-prompt">#</span> echo "Gateway: $(ip route | grep default | awk '{print \$3}')"</div>
+                        <div class="command-line"><span class="command-prompt">#</span> echo "DNS: $(cat /etc/resolv.conf | grep nameserver)"</div>
+                        <div class="command-line"><span class="command-prompt">#</span> ping -c 2 8.8.8.8</div>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">FreePBX Health Check</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Check module status</div>
+                        <div class="command-line"><span class="command-prompt">#</span> fwconsole ma list | grep -E "(Broken|Missing|Disabled)"</div>
+                        <div class="command-line comment"># Asterisk status</div>
+                        <div class="command-line"><span class="command-prompt">#</span> asterisk -rx "core show version"</div>
+                        <div class="command-line"><span class="command-prompt">#</span> asterisk -rx "sip show peers"</div>
+                        <div class="command-line"><span class="command-prompt">#</span> asterisk -rx "pjsip show endpoints"</div>
+                        <div class="command-line comment"># Check error logs</div>
+                        <div class="command-line"><span class="command-prompt">#</span> tail -50 /var/log/asterisk/full</div>
+                        <div class="command-line"><span class="command-prompt">#</span> tail -50 /var/log/messages</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">7</div>
+                <h3 class="step-title">Quick Fix Reference</h3>
+                <p class="step-description">Most common issues and their immediate solutions.</p>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Most Common Issues & Solutions</div>
+                        <button class="copy-btn" onclick="copyText(this, 'No internet but local works: route add default gw 192.168.1.1\nRepository errors: yum-config-manager --disable centos-* --enable sng-*\nVMWare not seen by router: Use Bridged mode, whitelist MAC\nFreePBX module issues: fwconsole ma repair <module>\nAsterisk won\"t start: fwconsole start --safe')">Copy Table</button>
+                    </div>
+                    <div class="command-content">
+                        <table class="fix-table">
+                            <tr>
+                                <th>Problem</th>
+                                <th>Quick Command</th>
+                            </tr>
+                            <tr>
+                                <td>No internet but local works</td>
+                                <td><span class="code-inline">route add default gw 192.168.1.1</span></td>
+                            </tr>
+                            <tr>
+                                <td>Repository errors</td>
+                                <td><span class="code-inline">yum-config-manager --disable centos-* --enable sng-*</span></td>
+                            </tr>
+                            <tr>
+                                <td>Can't install packages</td>
+                                <td>Download from <span class="code-inline">vault.centos.org</span> manually</td>
+                            </tr>
+                            <tr>
+                                <td>VMWare not seen by router</td>
+                                <td>Use Bridged mode, whitelist <span class="code-inline">00:0c:29:xx:xx:xx</span></td>
+                            </tr>
+                            <tr>
+                                <td>FreePBX module issues</td>
+                                <td><span class="code-inline">fwconsole ma repair &lt;module&gt;</span></td>
+                            </tr>
+                            <tr>
+                                <td>Asterisk won't start</td>
+                                <td><span class="code-inline">fwconsole start --safe</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Essential Backup Commands</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy All</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line comment"># Always run before major changes</div>
+                        <div class="command-line"><span class="command-prompt">#</span> fwconsole backup --backup</div>
+                        <div class="command-line comment"># Backup FreePBX config</div>
+                        <div class="command-line"><span class="command-prompt">#</span> cp /etc/freepbx.conf /etc/freepbx.conf.backup.$(date +%Y%m%d)</div>
+                        <div class="command-line comment"># Backup Asterisk configs</div>
+                        <div class="command-line"><span class="command-prompt">#</span> tar -czf /root/asterisk-backup.tar.gz /etc/asterisk /var/lib/asterisk</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <div class="box-title"><i class="fas fa-flag-checkered"></i> Troubleshooting Tips!</div>
+                <ul>
+                    <li><strong>Always backup</strong> before making changes</li>
+                    <li><strong>Document everything</strong> you modify</li>
+                    <li><strong>Test in maintenance windows</strong> only for production systems</li>
+                    <li><strong>Start with diagnostics</strong> before applying fixes</li>
+                    <li><strong>Use the quick reference</strong> for common issues</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- Step 9: Commands -->
+        <section id="common-commands" class="section-card">
+            <h2 class="card-title">
+                    <i class="fas fa-check-circle"></i> SSH Commands
+            </h2>
+            
+            <h2 class="card-title">
+                <i class="fas fa-terminal"></i> Common Sangoma/FreePBX Commands
+            </h2>
+
+            <div class="command-category">
+                <h3 class="category-title">
+                    <i class="fas fa-cogs"></i> System & Status Commands
+                </h3>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Check System Status</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            hostname
+                        </div>
+                        <div class="command-line comment"># Shows the machine name</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            hostname -f
+                        </div>
+                        <div class="command-line comment"># Shows full domain name</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            cat /etc/redhat-release
+                        </div>
+                        <div class="command-line comment"># Shows OS version</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            uptime
+                        </div>
+                        <div class="command-line comment"># Shows how long system has been running</div>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Service Management</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            systemctl status asterisk
+                        </div>
+                        <div class="command-line comment"># Check Asterisk service status</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            systemctl restart asterisk
+                        </div>
+                        <div class="command-line comment"># Restart Asterisk service</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            systemctl restart httpd
+                        </div>
+                        <div class="command-line comment"># Restart web server</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            systemctl restart mariadb
+                        </div>
+                        <div class="command-line comment"># Restart database</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-category">
+                <h3 class="category-title">
+                    <i class="fas fa-phone-alt"></i> Asterisk & Telephony Commands
+                </h3>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Asterisk Console Commands</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            asterisk -rx "core show version"
+                        </div>
+                        <div class="command-line comment"># Show Asterisk version</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            asterisk -rx "sip show peers"
+                        </div>
+                        <div class="command-line comment"># List all SIP peers (extensions/trunks)</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            asterisk -rx "sip show registry"
+                        </div>
+                        <div class="command-line comment"># Show SIP trunk registrations</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            asterisk -rx "core show channels"
+                        </div>
+                        <div class="command-line comment"># Show active calls</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            asterisk -rx "dialplan show"
+                        </div>
+                        <div class="command-line comment"># Show dialplan</div>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">PJSIP Commands (Newer Systems)</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            asterisk -rx "pjsip show endpoints"
+                        </div>
+                        <div class="command-line comment"># Show PJSIP endpoints</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            asterisk -rx "pjsip show registrations"
+                        </div>
+                        <div class="command-line comment"># Show PJSIP registrations</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            asterisk -rx "pjsip show contacts"
+                        </div>
+                        <div class="command-line comment"># Show registered contacts</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-category">
+                
+                <h3 class="category-title">
+                    <i class="fas fa-tools"></i> FreePBX Management Commands
+                </h3>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">FreePBX Framework Commands</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            fwconsole ma list
+                        </div>
+                        <div class="command-line comment"># List all modules and their status</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            fwconsole reload
+                        </div>
+                        <div class="command-line comment"># Reload FreePBX configuration</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            fwconsole restart
+                        </div>
+                        <div class="command-line comment"># Restart all FreePBX services</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            fwconsole ma listupgrades
+                        </div>
+                        <div class="command-line comment"># Show available module updates</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            fwconsole ma upgrade framework
+                        </div>
+                        <div class="command-line comment"># Update FreePBX framework</div>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Backup & Restore</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            fwconsole backup --backup
+                        </div>
+                        <div class="command-line comment"># Create full system backup</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            fwconsole backup --list
+                        </div>
+                        <div class="command-line comment"># List available backups</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            fwconsole backup --restore /path/to/backup.tgz
+                        </div>
+                        <div class="command-line comment"># Restore from backup</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-category">
+                <h3 class="category-title">
+                    <i class="fas fa-network-wired"></i> Network Commands
+                </h3>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Network Configuration</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            ip addr show
+                        </div>
+                        <div class="command-line comment"># Show IP addresses for all interfaces</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            ip route show
+                        </div>
+                        <div class="command-line comment"># Show routing table</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            ping -c 3 8.8.8.8
+                        </div>
+                        <div class="command-line comment"># Test internet connectivity (3 packets)</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            traceroute google.com
+                        </div>
+                        <div class="command-line comment"># Trace network route to Google</div>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">Firewall & Ports</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            firewall-cmd --list-all
+                        </div>
+                        <div class="command-line comment"># Show all firewall rules</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            netstat -tulpn | grep LISTEN
+                        </div>
+                        <div class="command-line comment"># Show all listening ports</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            ss -tulpn
+                        </div>
+                        <div class="command-line comment"># Modern alternative to netstat</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-category">
+                <h3 class="category-title">
+                    <i class="fas fa-database"></i> Database Commands
+                </h3>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">MySQL/MariaDB Commands</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            mysql asterisk
+                        </div>
+                        <div class="command-line comment"># Enter MySQL console for Asterisk DB</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            mysql -e "SHOW TABLES" asterisk
+                        </div>
+                        <div class="command-line comment"># Show all tables in Asterisk database</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            mysqldump --all-databases > backup.sql
+                        </div>
+                        <div class="command-line comment"># Backup all databases</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            mysql -e "SELECT * FROM cdr ORDER BY calldate DESC LIMIT 10" asterisk
+                        </div>
+                        <div class="command-line comment"># Show last 10 call records</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-category">
+                <h3 class="category-title">
+                    <i class="fas fa-file-alt"></i> Log Files & Monitoring
+                </h3>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">View Log Files</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            tail -f /var/log/asterisk/full
+                        </div>
+                        <div class="command-line comment"># Follow Asterisk log in real-time</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            tail -100 /var/log/asterisk/messages
+                        </div>
+                        <div class="command-line comment"># Show last 100 Asterisk messages</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            tail -f /var/log/httpd/error_log
+                        </div>
+                        <div class="command-line comment"># Follow web server error log</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            journalctl -f -u asterisk
+                        </div>
+                        <div class="command-line comment"># Follow Asterisk systemd journal</div>
+                    </div>
+                </div>
+
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">System Monitoring</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            top
+                        </div>
+                        <div class="command-line comment"># Interactive process viewer</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            htop
+                        </div>
+                        <div class="command-line comment"># Enhanced top (install with: yum install htop)</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            df -h
+                        </div>
+                        <div class="command-line comment"># Show disk usage in human-readable format</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            free -m
+                        </div>
+                        <div class="command-line comment"># Show memory usage in MB</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-category">
+                <h3 class="category-title">
+                    <i class="fas fa-wrench"></i> Package Management
+                </h3>
+                
+                <div class="command-box">
+                    <div class="command-header">
+                        <div class="command-title">YUM Package Manager</div>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <div class="command-content linux-code">
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            yum update
+                        </div>
+                        <div class="command-line comment"># Update all system packages</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            yum install nano
+                        </div>
+                        <div class="command-line comment"># Install nano text editor</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            yum remove package-name
+                        </div>
+                        <div class="command-line comment"># Remove a package</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            yum clean all
+                        </div>
+                        <div class="command-line comment"># Clean package cache</div>
+                        
+                        <div class="command-line">
+                            <span class="command-icon"><i class="fas fa-code"></i></span>
+                            yum repolist
+                        </div>
+                        <div class="command-line comment"># List enabled repositories</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <div class="box-title"><i class="fas fa-lightbulb"></i> Pro Tips</div>
+                <p>Use these commands for efficient FreePBX management:</p>
+                <ul>
+                    <li><strong>Quick Status:</strong> Combine commands: <span class="code-inline">systemctl status asterisk httpd mariadb</span></li>
+                    <li><strong>Real-time Monitoring:</strong> Use <span class="code-inline">screen</span> to run multiple tail commands</li>
+                    <li><strong>Backup Regularly:</strong> Schedule backups with cron: <span class="code-inline">fwconsole backup --backup</span></li>
+                    <li><strong>Safe Updates:</strong> Always backup before: <span class="code-inline">fwconsole ma upgradeall</span></li>
+                    <li><strong>Troubleshooting:</strong> Check logs first: <span class="code-inline">tail -f /var/log/asterisk/full</span></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-12 pt-8 border-t border-border-color text-center text-text-tertiary text-sm">
+            <p>FreePBX 17 Complete Installation Guide | Created by Amir Shemsu - Jr. IT Specialist</p>
+            <p class="mt-2">Phone: 0913082128 | Email: amishashems@gmail.com</p>
+            <p class="mt-2">
+                <a href="https://linkedin.com/in/amishashems" class="text-accent-blue hover:underline">LinkedIn</a> | 
+                <a href="https://github.com/AmirShemsu" class="text-accent-blue hover:underline">GitHub</a>
+            </p>
+        </footer>
+    </main>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            mobileMenuBtn.innerHTML = sidebar.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+
+        // Search functionality
+        function searchGuide() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const sections = document.querySelectorAll('.section-card');
+            const noResults = document.getElementById('noResults');
+            let visibleSections = 0;
+
+            sections.forEach(section => {
+                const txtValue = section.textContent || section.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    section.style.display = "";
+                    visibleSections++;
+                } else {
+                    section.style.display = "none";
+                }
+            });
+
+            noResults.style.display = visibleSections === 0 ? "" : "none";
+        }
+
+        // Toggle contact info
+        function toggleContactInfo() {
+            const contactList = document.getElementById('contact-list');
+            const toggleButton = document.getElementById('contact-toggle-btn');
+            
+            if (contactList.style.display === 'none') {
+                contactList.style.display = 'block';
+                toggleButton.textContent = 'Hide Contact';
+            } else {
+                contactList.style.display = 'none';
+                toggleButton.textContent = 'Show Contact';
+            }
+        }
+
+        // Copy code function
+        function copyCode(button) {
+            const codeContent = button.parentElement.nextElementSibling;
+            const textToCopy = codeContent.innerText;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Copy text function
+        function copyText(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Update progress when scrolling
+        function updateProgress() {
+            const sections = document.querySelectorAll('section');
+            const scrollPosition = window.scrollY + 100;
+            
+            let currentSection = 0;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.offsetTop;
+                if (scrollPosition >= sectionTop) {
+                    currentSection = index + 1;
+                }
+            });
+            
+            const progressPercentage = (currentSection / 7) * 100;
+            
+            document.getElementById('sidebarProgress').style.width = `${progressPercentage}%`;
+            document.getElementById('mainProgress').style.width = `${progressPercentage}%`;
+            document.getElementById('progressText').textContent = `Step ${currentSection} of 7`;
+        }
+
+        // Update progress on scroll
+        window.addEventListener('scroll', updateProgress);
+        updateProgress(); // Initial call
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // Close mobile menu if open
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                    
+                    // Scroll to element
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
